@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-text-size-adjust: 100%;
+  min-height: 100vh;
+  tab-size: 4;
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: inherit;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.note_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  grid-gap: 1rem;
+}
