@@ -17,7 +17,7 @@ export default function GetStarted() {
             Continue with Google
           </span>
         </OAuthButton>
-        <OAuthButton provider="google">
+        <OAuthButton provider="github">
           <Github className="text-2xl text-black" />
           <span className="text-base text-mantis-900">
             Continue with GitHub
