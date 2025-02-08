@@ -10,4 +10,18 @@ export default {
   pages: {
     signIn: "/get-started",
   },
+  callbacks: {
+    authorized: async ({ request, auth }) => {
+      const url = request.nextUrl;
+
+      if (
+        !url.pathname.includes("api") &&
+        (url.pathname.includes("dashboard") || url.pathname.includes("notes"))
+      ) {
+        return !!auth;
+      }
+
+      return true;
+    },
+  },
 } satisfies NextAuthConfig;

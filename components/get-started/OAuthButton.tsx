@@ -7,15 +7,19 @@ import { signIn } from "@/auth";
 export function OAuthButton({
   className,
   provider,
+  callbackUrl,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   provider: BuiltInProviderType;
+  callbackUrl?: string;
 }) {
   return (
     <form
       action={async () => {
         "use server";
-        await signIn(provider);
+        await signIn(provider, {
+          redirectTo: callbackUrl,
+        });
       }}
     >
       <Button
