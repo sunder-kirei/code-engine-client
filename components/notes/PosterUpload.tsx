@@ -5,7 +5,9 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/Button";
 
-export function PosterUpload() {
+export interface PosterUploadProps {}
+
+export function PosterUpload({}: PosterUploadProps) {
   const [src, setSrc] = useState<string | undefined>(undefined);
 
   const onDrop = useCallback((acceptedFiles: any[]) => {

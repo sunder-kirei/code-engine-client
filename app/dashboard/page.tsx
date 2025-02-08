@@ -1,25 +1,27 @@
-import { BadgeHelp, Code, FilePlus, Search } from "lucide-react";
-import { DashboardTile } from "@/components/dashboard/DashboardTile";
-import { NoteTile } from "@/components/dashboard/NoteTile";
+import { DashboardLink } from "@/components/dashboard/DashboardLink";
+import NoteGrid from "@/components/dashboard/NoteGrid";
 import { H2 } from "@/components/ui/H2";
 import { Page } from "@/components/ui/Page";
+import { BadgeHelp, Code, FilePlus, Search } from "lucide-react";
 
-export default function Dashboard() {
+export default async function Dashboard() {
   return (
     <Page className="flex flex-col gap-8">
       <section>
         <H2>Get Started</H2>
         <div className="flex gap-4">
-          <DashboardTile
+          <DashboardLink
             icon={FilePlus}
             title="Create a new file"
             label="New File"
+            type="note"
           />
 
-          <DashboardTile
+          <DashboardLink
             icon={Code}
             title="Start an IDE instance"
             label="IDE"
+            type="code"
             className="bg-blue-400 text-mantis-50 group-hover:bg-blue-600 group-hover:text-white"
           />
         </div>
@@ -39,25 +41,7 @@ export default function Dashboard() {
             />
           </div>
         </H2>
-        <div className="note_grid">
-          <NoteTile
-            title="Untitled"
-            updated_at={new Date()}
-            bgImg="/assets/test.png"
-          />
-          <NoteTile title="Untitled" updated_at={new Date()} />
-          <NoteTile title="Untitled" updated_at={new Date()} />
-          <NoteTile
-            title="Untitled"
-            updated_at={new Date()}
-            bgImg="/assets/test.png"
-          />
-          <NoteTile
-            title="Untitled"
-            updated_at={new Date()}
-            bgImg="/assets/test.png"
-          />
-        </div>
+        <NoteGrid />
       </section>
       <BadgeHelp
         className="bg-mantis-500 text-white text-sm p-4 rounded-full fixed bottom-6 right-6 hover:bg-mantis-600 transition-all  hover:scale-110"

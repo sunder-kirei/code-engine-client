@@ -64,7 +64,7 @@ export default function RootLayout({
         </head>
         <body
           className={twMerge(
-            "bg-mantis-50 dark:bg-mantis-1000 text-mantis-950 dark:text-mantis-50 flex flex-col",
+            "bg-mantis-50 dark:bg-mantis-1000 text-mantis-950 dark:text-mantis-50 flex flex-col transition-colors duration-300",
             ubuntu.className
           )}
         >

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { AlignJustify, Moon, Sun, X } from "lucide-react";
+import { AlignJustify, CloudUpload, Moon, Sun, X } from "lucide-react";
 import { Logo } from "@/components/branding/Logo";
 import { useAppDispatch, useAppSelector } from "@/store/";
 import { setTheme } from "@/store/themeSlice";
@@ -12,6 +12,7 @@ export function Nav() {
   const [isVisible, setIsVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const theme = useAppSelector((state) => state.theme);
+  const isUpdating = useAppSelector((state) => state.util.isUpdating);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export function Nav() {
           <X size={36} />
         </li>
       </nav>
-      <nav className="h-20 w-full sticky top-0 bg-inherit max-w-screen-2xl mx-auto">
+      <nav className="h-20 w-full sticky z-40 top-0 bg-inherit max-w-screen-2xl mx-auto">
         <ul className="h-full flex py-4 px-6">
           <li className="h-full">
             <Link
@@ -53,15 +54,23 @@ export function Nav() {
               </span>
             </Link>
           </li>
-          <div
-            className="relative h-6 aspect-square ml-auto justify-self-center self-center cursor-pointer transition-all duration-300 hover:scale-110"
+          <li className="h-full aspect-square ml-auto grid place-items-center">
+            <CloudUpload
+              className={twMerge(
+                "transition-all duration-300 scale-0 opacity-0",
+                isUpdating && "scale-100 opacity-100"
+              )}
+            />
+          </li>
+          <li
+            className="relative h-6 aspect-square justify-self-center self-center cursor-pointer transition-all duration-300 hover:scale-110"
             onClick={() => {
               dispatch(setTheme(theme.theme === "light" ? "dark" : "light"));
             }}
           >
             <Moon
               className={twMerge(
-                "absolute top-0 left-0 h-full w-full transition-all duration-300",
+                "absolute top-0 left-0 h-full w-full transition-all",
                 theme.theme === "dark"
                   ? "opacity-100 rotate-0"
                   : "opacity-0 -rotate-90"
@@ -69,13 +78,13 @@ export function Nav() {
             />
             <Sun
               className={twMerge(
-                "absolute top-0 left-0 h-full w-full transition-all duration-300",
+                "absolute top-0 left-0 h-full w-full transition-all",
                 theme.theme === "light"
                   ? "opacity-100 rotate-0"
                   : "opacity-0 -rotate-90"
               )}
             />
-          </div>
+          </li>
           <li
             className="h-full grid place-items-center aspect-square transition-all duration-300 hover:scale-125"
             role="button"

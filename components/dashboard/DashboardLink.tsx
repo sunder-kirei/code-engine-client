@@ -1,24 +1,28 @@
+import Link from "next/link";
 import { SVGAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-interface DashboardTileProps {
+interface DashboardLinkProps {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   title: string;
   label: string;
+  type: "code" | "note";
 }
 
-export function DashboardTile({
+export function DashboardLink({
   icon: Icon,
   title,
   label,
   className,
+  type,
   ...props
-}: SVGAttributes<SVGElement> & DashboardTileProps) {
+}: SVGAttributes<SVGElement> & DashboardLinkProps) {
   return (
-    <div
+    <Link
       className="flex group items-center flex-col gap-2"
       title={title}
       role="button"
+      href={`/new?type=${type}`}
     >
       <Icon
         className={twMerge(
@@ -28,6 +32,6 @@ export function DashboardTile({
         {...props}
       />
       <span className="text-sm">{label}</span>
-    </div>
+    </Link>
   );
 }
