@@ -18,8 +18,18 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  Notes           Notes[]
+  CodeFiles       CodeFiles[]
+  UserPreferences UserPreferences?
+}
+
+type UserPreferences {
+  darkModeEnabled    Boolean  @default(false)
+  defaultLanguage    Language @default(JavaScript)
+  codeEditorTheme    String   @default("vs-dark")
+  codeEditorFontSize Int      @default(14)
 }
 
 model Account {
@@ -78,4 +88,34 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
+}
+
+model Notes {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId String @db.ObjectId
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  content   String @default("")
+  title     String @default("Untitled")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CodeFiles {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId String   @db.ObjectId
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  content   String   @default("")
+  language  Language @default(JavaScript)
+  title     String   @default("Untitled")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Language {
+  JavaScript
+  Python
+  C
+  CPlusPlus
 }
