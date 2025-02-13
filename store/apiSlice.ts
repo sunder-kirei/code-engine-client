@@ -69,8 +69,6 @@ export const apiSlice = createApi({
     }),
     updateNote: builder.mutation<PutNoteResponse, PutNoteRequest>({
       query: ({ content, noteID, title, image, deleteImg }) => {
-        console.log({ content, noteID, title, deleteImg });
-
         return {
           url: `/notes/${noteID}`,
           method: "PATCH",
@@ -115,8 +113,6 @@ export const apiSlice = createApi({
     }),
     updateCode: builder.mutation<PutCodeResponse, PutCodeRequest>({
       query: ({ content, codeID, title, language }) => {
-        console.log({ content, codeID, title, language });
-
         return {
           url: `/codes/${codeID}`,
           method: "PATCH",

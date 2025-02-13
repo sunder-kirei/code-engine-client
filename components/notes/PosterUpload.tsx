@@ -26,8 +26,14 @@ export function PosterUpload({ noteID, userData }: PosterUploadProps) {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
 
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
+      reader.onabort = () => {
+        toast.error("File reading was aborted");
+        console.log("file reading was aborted");
+      };
+      reader.onerror = () => {
+        toast.error("File reading has failed");
+        console.log("file reading has failed");
+      };
       reader.onload = () => {
         // Do whatever you want with the file contents
         if (reader.result === null) return;

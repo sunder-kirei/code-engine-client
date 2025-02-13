@@ -58,8 +58,6 @@ export function ClientCodePage({
     };
   }, [codeID, codeState, data.content, updateCode]);
 
-  console.log({ languageState });
-
   return (
     <Page className="flex flex-col">
       <CodeTitleInput

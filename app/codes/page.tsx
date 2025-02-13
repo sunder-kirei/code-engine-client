@@ -25,8 +25,6 @@ export default async function CodesPage({
   });
   const count = await res.json();
 
-  console.log(count);
-
   return (
     <Page>
       <H2>All Codes</H2>

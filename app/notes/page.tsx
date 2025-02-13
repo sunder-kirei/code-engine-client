@@ -25,8 +25,6 @@ export default async function NotesPage({
   });
   const count = await res.json();
 
-  console.log(count);
-
   return (
     <Page>
       <H2>All Notes</H2>

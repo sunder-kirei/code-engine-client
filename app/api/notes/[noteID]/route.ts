@@ -72,7 +72,6 @@ export async function PATCH(
   { params }: { params: Promise<{ noteID: string }> }
 ) {
   const reqBody = putNoteSchema.safeParse(await request.json());
-  console.log({ reqBody });
 
   if (reqBody.success === false) {
     console.log({ error: reqBody.error.formErrors.fieldErrors });
@@ -123,7 +122,6 @@ export async function PATCH(
 
     const publicID =
       "notes" + "/" + note.imageURL.split("/").pop()?.split(".")[0];
-    console.log({ publicID });
     if (publicID) await cloudinary.uploader.destroy(publicID);
   };
 
@@ -161,7 +159,6 @@ export async function PATCH(
   };
 
   const imageURL = await uploadImage(reqBody.data.image);
-  console.log({ imageURL });
 
   const updatedNote = await prisma.notes.update({
     where: {
