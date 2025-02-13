@@ -46,7 +46,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
-    headers: await headers(),
+    headers: new Headers(await headers()),
   });
   const data: GetUserProfileResponse = await response.json();
 

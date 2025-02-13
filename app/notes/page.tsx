@@ -21,7 +21,7 @@ export default async function NotesPage({
   }
 
   const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/notes/count", {
-    headers: await headers(),
+    headers: new Headers(await headers()),
   });
   const count = await res.json();
 

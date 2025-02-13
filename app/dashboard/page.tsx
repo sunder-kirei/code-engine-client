@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export async function generateMetadata() {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
-    headers: await headers(),
+    headers: new Headers(await headers()),
   });
   const data: GetUserProfileResponse = await response.json();
   return {

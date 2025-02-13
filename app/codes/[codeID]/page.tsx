@@ -11,7 +11,7 @@ export async function generateMetadata({
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/codes/${codeID}`,
     {
-      headers: await headers(),
+      headers: new Headers(await headers()),
     }
   );
   const data: GetCodeResponse = await response.json();
@@ -30,7 +30,7 @@ export default async function CodePage({
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/codes/${codeID}`,
     {
-      headers: await headers(),
+      headers: new Headers(await headers()),
     }
   );
   const data: GetCodeResponse = await response.json();

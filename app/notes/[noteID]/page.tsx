@@ -14,7 +14,7 @@ export async function generateMetadata({
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/notes/${noteID}`,
     {
-      headers: await headers(),
+      headers: new Headers(await headers()),
     }
   );
   const data: GetNoteResponse = await response.json();
@@ -33,7 +33,7 @@ export default async function Note({
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/notes/${noteID}`,
     {
-      headers: await headers(),
+      headers: new Headers(await headers()),
     }
   );
   const data: GetNoteResponse = await response.json();
