@@ -30,6 +30,21 @@ export async function GET(request: NextRequest) {
   }
 
   if (type === "note") {
+    const noteCount = await prisma.notes.count({
+      where: {
+        creator: {
+          email: session.user.email,
+        },
+      },
+    });
+
+    if (noteCount > 15) {
+      return NextResponse.json(
+        { error: "You have reached the limit of 15 notes" },
+        { status: 400 }
+      );
+    }
+
     const note = await prisma.notes.create({
       data: {
         creator: {
@@ -42,6 +57,21 @@ export async function GET(request: NextRequest) {
 
     redirect(`/notes/${note.id}`);
   } else {
+    const codeCount = await prisma.codeFiles.count({
+      where: {
+        creator: {
+          email: session.user.email,
+        },
+      },
+    });
+
+    if (codeCount > 15) {
+      return NextResponse.json(
+        { error: "You have reached the limit of 15 code files" },
+        { status: 400 }
+      );
+    }
+
     const codeFile = await prisma.codeFiles.create({
       data: {
         language: user.UserPreferences?.defaultLanguage ?? "javascript",
