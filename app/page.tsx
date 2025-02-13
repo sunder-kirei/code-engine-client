@@ -24,7 +24,7 @@ export default async function Index() {
         />
       </div>
       <div className="w-full text-2xl font-bold text-center flex flex-col gap-6 justify-center items-center">
-        <h1 className=" dark:text-mantis-400 text-6xl">
+        <h1 className=" dark:text-mantis-400 sm:text-6xl text-5xl">
           Welcome to{" "}
           <span className="text-nowrap text-mantis-500">Code Engine</span>
         </h1>

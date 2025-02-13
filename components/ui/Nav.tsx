@@ -63,7 +63,7 @@ export function Nav({ userData }: NavProps) {
     <>
       <nav
         className={twMerge(
-          "fixed top-0 left-0 h-screen bg-black/50 backdrop-blur-sm z-50 transition-all duration-300 origin-top-right flex flex-col gap-4 items-center justify-center",
+          "fixed top-0 left-0 h-screen bg-black/50 backdrop-blur-sm z-50 text-white transition-all duration-300 origin-top-right flex flex-col gap-4 items-center justify-center",
           open ? "w-screen pointer-events-auto" : "w-0 pointer-events-none"
         )}
       >
@@ -131,7 +131,7 @@ export function Nav({ userData }: NavProps) {
               className="flex justify-center items-center h-full gap-2 group"
             >
               <Logo className="p-3 grow-0 shrink-0" />
-              <span className="grow font-bold text-xl group-hover:scale-110 transition-all duration-300 text-nowrap">
+              <span className="grow font-bold sm:text-xl text-lg group-hover:scale-110 transition-all duration-300 text-nowrap">
                 Code Engine
               </span>
             </Link>

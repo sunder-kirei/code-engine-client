@@ -20,7 +20,7 @@ export default async function GetStarted(props: {
   return (
     <Page className="flex flex-col items-center justify-start gap-8">
       <h2 className="text-2xl">Let&apos;s get you set up.</h2>
-      <div className="w-96 bg-mantis-100 p-6 rounded-lg flex flex-col gap-4">
+      <div className="w-96 max-w-[90vw] bg-mantis-100 p-6 rounded-lg flex flex-col gap-4">
         <OAuthButton provider="google" callbackUrl={callbackUrl}>
           <GoogleIcon className="text-2xl" />
           <span className="text-base text-mantis-900">

@@ -13,6 +13,17 @@ interface ProfileSearchParams {
   tab?: "info" | "preference";
 }
 
+export async function generateMetadata() {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+    headers: new Headers(await headers()),
+  });
+  const data: GetUserProfileResponse = await response.json();
+  return {
+    title: `${data.name}'s Profile`,
+    description: "User's Profile",
+  };
+}
+
 export default async function Profile({
   searchParams,
 }: {
