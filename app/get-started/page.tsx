@@ -1,10 +1,8 @@
-import { Github } from "lucide-react";
-import { auth, signIn } from "@/auth";
+import { auth } from "@/auth";
 import { GoogleIcon } from "@/components/get-started/GoogleIcon";
 import { OAuthButton } from "@/components/get-started/OAuthButton";
-import { Button } from "@/components/ui/Button";
 import { Page } from "@/components/ui/Page";
-import { TextInput } from "@/components/ui/TextInput";
+import { Github } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function GetStarted(props: {
@@ -35,7 +33,7 @@ export default async function GetStarted(props: {
             Continue with GitHub
           </span>
         </OAuthButton>
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <div className="h-[1px] bg-mantis-400 dark:bg-mantis-400/70   mx-auto w-full my-4" />
           <span>or</span>
           <div className="h-[1px] bg-mantis-400 dark:bg-mantis-400/70   mx-auto w-full my-4" />
@@ -52,7 +50,7 @@ export default async function GetStarted(props: {
           <Button className="w-full text-base font-bold">
             Continue with Email
           </Button>
-        </form>
+        </form> */}
       </div>
     </Page>
   );
