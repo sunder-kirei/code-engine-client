@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
 
 interface ThemeState {
-  theme: "light" | "dark";
+  darkModeEnabled: boolean;
 }
 
 const initialState: ThemeState = {
-  theme: "light",
+  darkModeEnabled: false,
 };
 
 export const themeSlice = createSlice({
@@ -14,11 +14,11 @@ export const themeSlice = createSlice({
   initialState,
   reducers: {
     setTheme: (state, action) => {
-      state.theme = action.payload;
+      state.darkModeEnabled = action.payload;
     },
   },
 });
 
 export const { setTheme } = themeSlice.actions;
 
-export const selectTheme = (state: RootState) => state.theme.theme;
+export const selectTheme = (state: RootState) => state.theme.darkModeEnabled;

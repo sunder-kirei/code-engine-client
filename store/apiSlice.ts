@@ -1,8 +1,16 @@
 import {
+  GetAllCodesRequest,
+  GetAllCodesResponse,
+  GetAllNotesRequest,
   GetAllNotesResponse,
+  GetCodeResponse,
   GetNoteResponse,
+  GetUserProfileResponse,
+  PutCodeRequest,
+  PutCodeResponse,
   PutNoteRequest,
   PutNoteResponse,
+  PutUserProfileRequest,
 } from "@/types/redux";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -13,29 +21,38 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: NEXT_PUBLIC_API_URL,
   }),
-  tagTypes: ["Notes"],
+  tagTypes: ["Notes", "Codes", "UserProfile"],
   endpoints: (builder) => ({
-    getAllNotes: builder.query<GetAllNotesResponse, void>({
+    getUserProfile: builder.query<GetUserProfileResponse, void>({
       query: () => ({
-        url: "/notes",
+        url: "/user",
+        method: "GET",
+      }),
+      providesTags: ["UserProfile"],
+    }),
+    putUserProfile: builder.mutation<
+      GetUserProfileResponse,
+      PutUserProfileRequest
+    >({
+      query: ({ name, image, defaultLanguage, darkModeEnabled }) => ({
+        url: "/user",
+        method: "PATCH",
+        body: {
+          name,
+          image,
+          defaultLanguage,
+          darkModeEnabled,
+        },
+      }),
+      invalidatesTags: ["UserProfile"],
+    }),
+
+    getAllNotes: builder.query<GetAllNotesResponse, GetAllNotesRequest>({
+      query: ({ limit, page }) => ({
+        url: `/notes?limit=${limit}&page=${page}`,
         method: "GET",
       }),
       providesTags: ["Notes"],
-    }),
-    updateNote: builder.mutation<PutNoteResponse, PutNoteRequest>({
-      query: ({ content, noteID, title }) => {
-        console.log({ content, noteID, title });
-
-        return {
-          url: `/notes/${noteID}`,
-          method: "PUT",
-          body: { content, title },
-        };
-      },
-      invalidatesTags: (response) => [
-        { type: "Notes", id: response?.id },
-        { type: "Notes" },
-      ],
     }),
     getNote: builder.query<GetNoteResponse, string>({
       query: (noteID) => ({
@@ -43,6 +60,27 @@ export const apiSlice = createApi({
         method: "GET",
       }),
       providesTags: (response) => [{ type: "Notes", id: response?.id }],
+    }),
+    queryNote: builder.query<GetNoteResponse, string>({
+      query: (query) => ({
+        url: `/notes/query?title=${query}`,
+        method: "GET",
+      }),
+    }),
+    updateNote: builder.mutation<PutNoteResponse, PutNoteRequest>({
+      query: ({ content, noteID, title }) => {
+        console.log({ content, noteID, title });
+
+        return {
+          url: `/notes/${noteID}`,
+          method: "PATCH",
+          body: { content, title },
+        };
+      },
+      invalidatesTags: (response) => [
+        { type: "Notes", id: response?.id },
+        { type: "Notes" },
+      ],
     }),
     deleteNote: builder.mutation<void, string>({
       query: (noteID) => ({
@@ -54,6 +92,52 @@ export const apiSlice = createApi({
         { type: "Notes" },
       ],
     }),
+
+    getAllCodes: builder.query<GetAllCodesResponse, GetAllCodesRequest>({
+      query: ({ limit = 10, page = 1 }) => ({
+        url: `/codes?limit=${limit}&page=${page}`,
+        method: "GET",
+      }),
+      providesTags: ["Codes"],
+    }),
+    getCode: builder.query<GetCodeResponse, string>({
+      query: (codeID) => ({
+        url: `/codes/${codeID}`,
+        method: "GET",
+      }),
+      providesTags: (response) => [{ type: "Codes", id: response?.id }],
+    }),
+    queryCode: builder.query<GetCodeResponse, string>({
+      query: (query) => ({
+        url: `/codes/query?title=${query}`,
+        method: "GET",
+      }),
+    }),
+    updateCode: builder.mutation<PutCodeResponse, PutCodeRequest>({
+      query: ({ content, codeID, title, language }) => {
+        console.log({ content, codeID, title, language });
+
+        return {
+          url: `/codes/${codeID}`,
+          method: "PATCH",
+          body: { content, title, language },
+        };
+      },
+      invalidatesTags: (response) => [
+        { type: "Codes", id: response?.id },
+        { type: "Codes" },
+      ],
+    }),
+    deleteCode: builder.mutation<void, string>({
+      query: (codeID) => ({
+        url: `/codes/${codeID}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (response, error, codeID) => [
+        { type: "Codes", id: codeID },
+        { type: "Codes" },
+      ],
+    }),
   }),
 });
 
@@ -62,5 +146,13 @@ export const {
   useGetAllNotesQuery,
   useDeleteNoteMutation,
   useGetNoteQuery,
+  useUpdateCodeMutation,
+  useGetAllCodesQuery,
+  useDeleteCodeMutation,
+  useGetCodeQuery,
+  useGetUserProfileQuery,
+  useQueryCodeQuery,
+  useQueryNoteQuery,
+  usePutUserProfileMutation,
   endpoints,
 } = apiSlice;
