@@ -5,6 +5,8 @@ import "./global.css";
 import { twMerge } from "tailwind-merge";
 import { HTML } from "@/components/ui/HTML";
 import { ReduxProvider } from "@/components/ui/Provider";
+import { headers } from "next/headers";
+import { GetUserProfileResponse } from "@/types/redux";
 
 export const metadata = {
   title: "Welcome to client",
@@ -37,13 +39,18 @@ const ubuntu = localFont({
   variable: "--font-inter",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+    headers: await headers(),
+  });
+  const data: GetUserProfileResponse = await response.json();
+
   return (
-    <ReduxProvider>
+    <ReduxProvider userData={data}>
       <HTML>
         <head>
           <link
@@ -68,7 +75,7 @@ export default function RootLayout({
             ubuntu.className
           )}
         >
-          <Nav />
+          <Nav userData={data} />
           {children}
         </body>
       </HTML>

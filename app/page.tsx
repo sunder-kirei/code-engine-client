@@ -1,10 +1,18 @@
+import { auth } from "@/auth";
 import { NotionIcon } from "@/components/landing/NotionIcon";
 import { VsCodeIcon } from "@/components/landing/VsCodeIcon";
 import { LinkButton } from "@/components/ui/LinkButton";
 import { Page } from "@/components/ui/Page";
 import { Github, X } from "lucide-react";
+import { redirect } from "next/navigation";
 
-export default function Index() {
+export default async function Index() {
+  const session = await auth();
+
+  if (session?.user) {
+    return redirect("/dashboard");
+  }
+
   return (
     <Page className="flex flex-col md:flex-row justify-center items-center gap-8">
       <div className="w-full bg-mantis-50 rounded-lg">

@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   let type = request.nextUrl.searchParams.get("type");
@@ -11,8 +11,22 @@ export async function GET(request: NextRequest) {
 
   const session = await auth();
 
-  if (!session?.user) {
+  if (!session?.user || !session.user.email) {
     redirect(`/get-started?callbackUrl=/new?type=${type}`);
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+    select: {
+      id: true,
+      UserPreferences: true,
+    },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
   if (type === "note") {
@@ -30,6 +44,7 @@ export async function GET(request: NextRequest) {
   } else {
     const codeFile = await prisma.codeFiles.create({
       data: {
+        language: user.UserPreferences?.defaultLanguage ?? "javascript",
         creator: {
           connect: {
             email: session.user.email ?? "",
@@ -38,6 +53,6 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    redirect(`/code/${codeFile.id}`);
+    redirect(`/codes/${codeFile.id}`);
   }
 }

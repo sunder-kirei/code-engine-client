@@ -1,7 +1,7 @@
 import { Editor } from "@/components/blocknote/DynamicEditor";
 import NoteTitleInput from "@/components/notes/NoteTitleInput";
 import { Page } from "@/components/ui/Page";
-import { GetNoteResponse } from "@/types/redux";
+import { GetNoteResponse, GetUserProfileResponse } from "@/types/redux";
 import { headers } from "next/headers";
 import { PosterUpload } from "../../../components/notes/PosterUpload";
 

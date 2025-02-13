@@ -20,3 +20,24 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   grid-gap: 1rem;
 }
+
+.language-select-icon {
+  @apply h-12 w-full py-2 px-4 bg-white dark:bg-black flex gap-2 items-center justify-between hover:scale-110 transition-transform duration-200 rounded-full ring-1 ring-mantis-200;
+}
+
+.editor-wrapper {
+  flex-grow: 1;
+  @apply border rounded-md overflow-hidden;
+}
+
+.profile-nav-link {
+  @apply px-4 py-2 rounded-md text-nowrap;
+}
+
+.profile-nav-link__selected {
+  @apply bg-mantis-500 text-white;
+}
+
+.profile-dropdown-item {
+  @apply px-4 py-2 flex gap-2 items-center justify-start text-nowrap hover:text-mantis-500 transition-all duration-100;
+}

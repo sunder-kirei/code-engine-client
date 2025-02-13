@@ -20,7 +20,7 @@ export default function NoteTitleInput({ title, noteID }: NoteTitleInputProps) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [noteID, titleState, updateNote]);
+  }, [noteID, title, titleState, updateNote]);
 
   return (
     <input

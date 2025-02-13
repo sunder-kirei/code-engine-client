@@ -26,7 +26,9 @@ export default function StaticEditor({
     return parsed;
   }, [initialState]);
 
-  const theme = useAppSelector((state) => state.theme.theme);
+  const darkModeEnabled = useAppSelector(
+    (state) => state.theme.darkModeEnabled
+  );
   const [updateNote] = useUpdateNoteMutation();
   const [blockState, setBlockState] = useState<Block[]>(initialContent);
 
@@ -38,7 +40,7 @@ export default function StaticEditor({
     return () => {
       clearTimeout(timeout);
     };
-  }, [blockState, noteID, updateNote]);
+  }, [blockState, initialContent, noteID, updateNote]);
 
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
@@ -54,7 +56,7 @@ export default function StaticEditor({
   return (
     <BlockNoteView
       editor={editor}
-      theme={theme}
+      theme={darkModeEnabled ? "dark" : "light"}
       onChange={() => setBlockState(editor.document)}
       className="h-full grow flex flex-col"
     />

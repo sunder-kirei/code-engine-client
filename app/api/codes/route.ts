@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
-import { getAllNotesSchema } from "@/schema/zod";
+import { getAllCodesSchema } from "@/schema/zod";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const params = getAllNotesSchema.safeParse(
+  const params = getAllCodesSchema.safeParse(
     Object.fromEntries(request.nextUrl.searchParams)
   );
 
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
   if (params.data.page) params.data.page--;
 
-  const notes = await prisma.notes.findMany({
+  const codes = await prisma.codeFiles.findMany({
     where: {
       creator: {
         email: session.user.email,
@@ -39,14 +39,15 @@ export async function GET(request: NextRequest) {
     select: {
       id: true,
       title: true,
+      language: true,
       createdAt: true,
       updatedAt: true,
     },
-    skip: (params.data.page ?? 0) * (params.data.limit ?? 10),
     take: params.data.limit,
+    skip: (params.data.page ?? 0) * (params.data.limit ?? 10),
   });
 
-  return Response.json(notes, {
+  return Response.json(codes, {
     status: 200,
     headers: {
       "Content-Type": "application/json",

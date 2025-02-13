@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { putNoteSchema } from "@/schema/zod";
+import { putCodeSchema } from "@/schema/zod";
 import { prisma } from "@/prisma";
 import { NextApiRequest } from "next";
 import { NextRequest } from "next/server";
@@ -14,7 +14,7 @@ export const config = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ noteID: string }> }
+  { params }: { params: Promise<{ codeID: string }> }
 ) {
   const session = await auth();
   if (!session?.user) {
@@ -27,18 +27,18 @@ export async function GET(
   }
 
   const p = await params;
-  if (!p || !p.noteID) {
+  if (!p || !p.codeID) {
     return Response.json(
-      { error: "Invalid noteID" },
+      { error: "Invalid codeID" },
       {
         status: 400,
       }
     );
   }
 
-  const note = await prisma.notes.findUnique({
+  const note = await prisma.codeFiles.findUnique({
     where: {
-      id: p.noteID,
+      id: p.codeID,
       creator: {
         email: session.user.email,
       },
@@ -47,13 +47,14 @@ export async function GET(
       id: true,
       title: true,
       content: true,
+      language: true,
       createdAt: true,
       updatedAt: true,
     },
   });
 
   if (!note) {
-    return Response.json({ error: "Note not found" }, { status: 404 });
+    return Response.json({ error: "Code not found" }, { status: 404 });
   }
 
   return Response.json(note, {
@@ -66,9 +67,9 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ noteID: string }> }
+  { params }: { params: Promise<{ codeID: string }> }
 ) {
-  const reqBody = putNoteSchema.safeParse(await request.json());
+  const reqBody = putCodeSchema.safeParse(await request.json());
 
   if (reqBody.success === false) {
     return Response.json(
@@ -88,13 +89,13 @@ export async function PATCH(
   }
 
   const p = await params;
-  if (!p || !p.noteID) {
-    return Response.json({ error: "Invalid noteID" }, { status: 400 });
+  if (!p || !p.codeID) {
+    return Response.json({ error: "Invalid codeID" }, { status: 400 });
   }
 
-  const note = await prisma.notes.findUnique({
+  const note = await prisma.codeFiles.findUnique({
     where: {
-      id: p.noteID,
+      id: p.codeID,
       creator: {
         email: session.user.email,
       },
@@ -103,29 +104,28 @@ export async function PATCH(
       id: true,
       title: true,
       content: true,
+      language: true,
       createdAt: true,
       updatedAt: true,
     },
   });
 
   if (!note) {
-    return Response.json({ error: "Note not found" }, { status: 404 });
+    return Response.json({ error: "Code not found" }, { status: 404 });
   }
 
-  const updatedNote = await prisma.notes.update({
+  const updatedCode = await prisma.codeFiles.update({
     where: {
-      id: p.noteID,
-      creator: {
-        email: session.user.email,
-      },
+      id: p.codeID,
     },
     data: {
       content: reqBody.data.content,
       title: reqBody.data.title,
+      language: reqBody.data.language,
     },
   });
 
-  return Response.json(updatedNote, {
+  return Response.json(updatedCode, {
     status: 200,
     headers: {
       "Content-Type": "application/json",
@@ -135,7 +135,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextApiRequest,
-  { params }: { params: Promise<{ noteID: string }> }
+  { params }: { params: Promise<{ codeID: string }> }
 ) {
   const session = await auth();
   if (!session?.user) {
@@ -143,38 +143,32 @@ export async function DELETE(
   }
 
   const p = await params;
-  if (!p || !p.noteID) {
-    return Response.json({ error: "Invalid noteID" }, { status: 400 });
+  if (!p || !p.codeID) {
+    return Response.json({ error: "Invalid codeID" }, { status: 400 });
   }
 
-  const note = await prisma.notes.findUnique({
+  const code = await prisma.codeFiles.findUnique({
     where: {
-      id: p.noteID,
-      creator: {
-        email: session.user.email,
-      },
+      id: p.codeID,
     },
     include: {
       creator: true,
     },
   });
 
-  if (!note) {
-    return Response.json({ error: "Note not found" }, { status: 404 });
+  if (!code) {
+    return Response.json({ error: "Code not found" }, { status: 404 });
   }
 
-  if (note.creator.email !== session.user.email) {
+  if (code.creator.email !== session.user.email) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  await prisma.notes.delete({
+  await prisma.codeFiles.delete({
     where: {
-      id: p.noteID,
-      creator: {
-        email: session.user.email,
-      },
+      id: p.codeID,
     },
   });
 
-  return Response.json({ message: "Note deleted" }, { status: 204 });
+  return Response.json({ message: "Code deleted" }, { status: 204 });
 }

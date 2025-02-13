@@ -3,10 +3,12 @@
 import { useAppSelector } from "@/store";
 
 export function HTML({ children }: { children: React.ReactNode }) {
-  const theme = useAppSelector((state) => state.theme.theme);
+  const darkModeEnabled = useAppSelector(
+    (state) => state.theme.darkModeEnabled
+  );
 
   return (
-    <html lang="en" className={`${theme}`}>
+    <html lang="en" className={`${darkModeEnabled ? "dark" : "light"}`}>
       {children}
     </html>
   );
