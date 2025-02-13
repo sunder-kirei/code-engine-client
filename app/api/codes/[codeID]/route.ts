@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
-import { putCodeSchema } from "@/schema/zod";
 import { prisma } from "@/prisma";
-import { NextApiRequest } from "next";
+import { putCodeSchema } from "@/schema/zod";
 import { NextRequest } from "next/server";
 
 export const config = {
@@ -134,7 +133,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: NextApiRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ codeID: string }> }
 ) {
   const session = await auth();

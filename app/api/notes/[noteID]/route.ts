@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import { putNoteSchema } from "@/schema/zod";
-import { NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
 import { v2 as cloudinary } from "cloudinary";
@@ -183,7 +182,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: NextApiRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ noteID: string }> }
 ) {
   const session = await auth();
