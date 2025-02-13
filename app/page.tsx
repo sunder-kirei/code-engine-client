@@ -11,7 +11,7 @@ export default async function Index() {
   const session = await auth();
 
   if (session?.user) {
-    return redirect("/dashboard");
+    redirect("/dashboard");
   }
 
   return (

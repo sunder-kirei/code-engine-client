@@ -14,7 +14,7 @@ export default async function GetStarted(props: {
   const session = await auth();
 
   if (session?.user) {
-    return redirect("/dashboard");
+    redirect("/dashboard");
   }
 
   return (
