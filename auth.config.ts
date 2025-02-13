@@ -16,7 +16,11 @@ export default {
 
       if (
         !url.pathname.includes("api") &&
-        (url.pathname.includes("dashboard") || url.pathname.includes("notes"))
+        (url.pathname.includes("dashboard") ||
+          url.pathname.includes("notes") ||
+          url.pathname.includes("profile") ||
+          url.pathname.includes("codes") ||
+          url.pathname.includes("new"))
       ) {
         return !!auth;
       }
