@@ -36,7 +36,7 @@ export default async function Index() {
         </h2>
         <div className="flex flex-row gap-4 justify-center items-center">
           <LinkButton href="get-started">Get Started</LinkButton>
-          <LinkButton href="https://github.com/sunder-kirei/code-engine">
+          <LinkButton href="https://github.com/sunder-kirei/code-engine-client">
             <Github />
           </LinkButton>
         </div>
