@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { GetUserProfileResponse } from "@/types/redux";
 import { User } from "lucide-react";
 import { twMerge } from "tailwind-merge";

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { auth } from "@/auth";
 import { NotionIcon } from "@/components/landing/NotionIcon";
 import { VsCodeIcon } from "@/components/landing/VsCodeIcon";

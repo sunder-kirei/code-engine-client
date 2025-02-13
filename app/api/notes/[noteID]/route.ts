@@ -1,11 +1,10 @@
 import { auth } from "@/auth";
-import { putNoteSchema } from "@/schema/zod";
 import { prisma } from "@/prisma";
+import { putNoteSchema } from "@/schema/zod";
 import { NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
 import { v2 as cloudinary } from "cloudinary";
-import { error } from "console";
 
 export const config = {
   api: {
