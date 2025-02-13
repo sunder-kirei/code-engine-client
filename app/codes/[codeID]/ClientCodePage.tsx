@@ -2,6 +2,7 @@
 
 import CodeEditor from "@/components/code/CodeEditor";
 import CodeTitleInput from "@/components/code/CodeTitleInput";
+import { DeleteCodeDialog } from "@/components/code/DeleteCodeDialog";
 import { Page } from "@/components/ui/Page";
 import { useAppSelector } from "@/store";
 import { useUpdateCodeMutation } from "@/store/apiSlice";
@@ -59,22 +60,25 @@ export function ClientCodePage({
   }, [codeID, codeState, data.content, updateCode]);
 
   return (
-    <Page className="flex flex-col">
-      <CodeTitleInput
-        setLanguageState={setLanguageState}
-        setTitleState={setTitleState}
-        title={titleState}
-        language={languageState}
-      />
-      <CodeEditor
-        wrapperProps={{
-          className: "editor-wrapper",
-        }}
-        value={codeState}
-        language={languageState}
-        theme={darkModeEnabled ? "vs-dark" : "vs-light"}
-        onChange={(value) => setCodeState(value ?? "")}
-      />
-    </Page>
+    <>
+      <DeleteCodeDialog codeID={codeID} />
+      <Page className="flex flex-col">
+        <CodeTitleInput
+          setLanguageState={setLanguageState}
+          setTitleState={setTitleState}
+          title={titleState}
+          language={languageState}
+        />
+        <CodeEditor
+          wrapperProps={{
+            className: "editor-wrapper",
+          }}
+          value={codeState}
+          language={languageState}
+          theme={darkModeEnabled ? "vs-dark" : "vs-light"}
+          onChange={(value) => setCodeState(value ?? "")}
+        />
+      </Page>
+    </>
   );
 }

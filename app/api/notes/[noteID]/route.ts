@@ -224,5 +224,5 @@ export async function DELETE(
     },
   });
 
-  return Response.json({ message: "Note deleted" }, { status: 204 });
+  return Response.json({ status: 204 });
 }

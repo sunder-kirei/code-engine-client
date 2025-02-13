@@ -29,6 +29,19 @@ export const utilSlice = createSlice({
     });
 
     builder.addMatcher(
+      apiSlice.endpoints.deleteNote.matchFulfilled,
+      (state) => {
+        state.isUpdating = false;
+      }
+    );
+    builder.addMatcher(apiSlice.endpoints.deleteNote.matchRejected, (state) => {
+      state.isUpdating = false;
+    });
+    builder.addMatcher(apiSlice.endpoints.deleteNote.matchPending, (state) => {
+      state.isUpdating = true;
+    });
+
+    builder.addMatcher(
       apiSlice.endpoints.updateCode.matchFulfilled,
       (state) => {
         state.isUpdating = false;
@@ -38,6 +51,19 @@ export const utilSlice = createSlice({
       state.isUpdating = false;
     });
     builder.addMatcher(apiSlice.endpoints.updateCode.matchPending, (state) => {
+      state.isUpdating = true;
+    });
+
+    builder.addMatcher(
+      apiSlice.endpoints.deleteCode.matchFulfilled,
+      (state) => {
+        state.isUpdating = false;
+      }
+    );
+    builder.addMatcher(apiSlice.endpoints.deleteCode.matchRejected, (state) => {
+      state.isUpdating = false;
+    });
+    builder.addMatcher(apiSlice.endpoints.deleteCode.matchPending, (state) => {
       state.isUpdating = true;
     });
 

@@ -1,4 +1,5 @@
 import { Editor } from "@/components/blocknote/DynamicEditor";
+import { DeleteNoteDialog } from "@/components/notes/DeleteNoteDialog";
 import NoteTitleInput from "@/components/notes/NoteTitleInput";
 import { Page } from "@/components/ui/Page";
 import { GetNoteResponse } from "@/types/redux";
@@ -40,6 +41,7 @@ export default async function Note({
 
   return (
     <>
+      <DeleteNoteDialog noteID={noteID} />
       <PosterUpload noteID={noteID} userData={data} />
       <Page className="max-w-screen-xl min-h-screen px-3 pb-1 flex flex-col gap-4">
         <NoteTitleInput title={data.title} noteID={noteID} />

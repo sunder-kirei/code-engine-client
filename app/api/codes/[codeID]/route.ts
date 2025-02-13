@@ -169,5 +169,5 @@ export async function DELETE(
     },
   });
 
-  return Response.json({ message: "Code deleted" }, { status: 204 });
+  return Response.json({ status: 204 });
 }
