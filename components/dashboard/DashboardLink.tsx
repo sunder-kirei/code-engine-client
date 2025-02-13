@@ -22,6 +22,7 @@ export function DashboardLink({
       className="flex group items-center flex-col gap-2"
       title={title}
       role="button"
+      prefetch={false}
       href={`/new?type=${type}`}
     >
       <Icon

@@ -24,6 +24,7 @@ export default function CodeGrid({
     <div className="h-48 rounded-md bg-mantis-300 w-full flex flex-col items-center justify-center gap-2">
       <h2 className="text-mantis-50 text-2xl font-semibold ">No CodeFiles</h2>
       <Link
+        prefetch={false}
         href="/new?type=code"
         className="bg-mantis-500 px-4 py-2 rounded-full text-mantis-100 hover:scale-110 transition-all duration-300"
       >

@@ -88,6 +88,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
         <Link
           href="/new?type=note"
+          prefetch={false}
           onClick={() => setOpen((prev) => !prev)}
           className={twMerge(
             "font-bold text-3xl hover:scale-110 transition-all duration-300 after:block after:w-0 after:h-1 after:bg-mantis-900 hover:after:w-full after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300",
@@ -100,6 +101,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
         <Link
           href="/new?type=code"
+          prefetch={false}
           onClick={() => setOpen((prev) => !prev)}
           className={twMerge(
             "font-bold text-3xl hover:scale-110 transition-all duration-300 after:block after:w-0 after:h-1 after:bg-mantis-900 hover:after:w-full after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300",
@@ -124,7 +126,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
       </nav>
       <nav className="h-20 w-full sticky z-40 top-0 bg-inherit max-w-screen-2xl mx-auto">
-        <ul className="h-full flex py-4 sm:px-6 px-4 gap-1 overflow-hidden">
+        <ul className="h-full flex py-4 sm:px-6 px-4 gap-1">
           <li className="h-full">
             <Link
               href="/"
