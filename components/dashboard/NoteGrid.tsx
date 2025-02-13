@@ -22,7 +22,18 @@ export default function NoteGrid({
     limit,
     page,
   });
-  return (
+
+  return !isLoading && (data?.length ?? 0) === 0 ? (
+    <div className="h-48 rounded-md bg-mantis-300 w-full flex flex-col items-center justify-center gap-2">
+      <h2 className="text-mantis-50 text-2xl font-semibold ">No Notes</h2>
+      <Link
+        href="/new?type=note"
+        className="bg-mantis-500 px-4 py-2 rounded-full text-mantis-100 hover:scale-110 transition-all duration-300"
+      >
+        Create new note
+      </Link>
+    </div>
+  ) : (
     <div className={twMerge("note_grid", className)} {...props}>
       {isLoading &&
         Array(5)
@@ -37,20 +48,9 @@ export default function NoteGrid({
           id={note.id}
           title={note.title}
           updated_at={new Date(note.updatedAt)}
-          bgImg={"/assets/test.png"}
+          bgImg={note.imageURL}
         />
       ))}
-      {data?.length === 0 && (
-        <div className="aspect-[5/2] rounded-md bg-mantis-300 w-full flex flex-col items-center justify-center gap-2">
-          <h2 className="text-mantis-50 text-2xl font-semibold ">No Notes</h2>
-          <Link
-            href="/new?type=note"
-            className="bg-mantis-500 px-4 py-2 rounded-full text-mantis-100 hover:scale-110 transition-all duration-300"
-          >
-            Create new note
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

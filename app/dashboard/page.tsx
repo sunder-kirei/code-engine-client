@@ -3,8 +3,21 @@ import { DashboardLink } from "@/components/dashboard/DashboardLink";
 import NoteGrid from "@/components/dashboard/NoteGrid";
 import { H2 } from "@/components/ui/H2";
 import { Page } from "@/components/ui/Page";
-import { BadgeHelp, ChevronRight, Code, FilePlus } from "lucide-react";
+import { GetUserProfileResponse } from "@/types/redux";
+import { ChevronRight, Code, FilePlus } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
+
+export async function generateMetadata() {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+    headers: await headers(),
+  });
+  const data: GetUserProfileResponse = await response.json();
+  return {
+    title: `${data.name}'s Dashboard`,
+    description: "Dashboard",
+  };
+}
 
 export default async function Dashboard() {
   return (
@@ -76,11 +89,11 @@ export default async function Dashboard() {
         </H2>
         <CodeGrid />
       </section>
-      <BadgeHelp
+      {/* <BadgeHelp
         className="bg-mantis-500 text-white text-sm p-4 rounded-full fixed bottom-6 right-6 hover:bg-mantis-600 transition-all  hover:scale-110"
         size={64}
         role="button"
-      />
+      /> */}
     </Page>
   );
 }

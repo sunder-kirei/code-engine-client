@@ -29,6 +29,8 @@ export function ClientCodePage({
   useEffect(() => {
     const timeout = setTimeout(() => {
       updateCode({ codeID, title: titleState });
+      if (titleState) document.title = titleState;
+      else document.title = "Untitled";
     }, 500);
 
     return () => {

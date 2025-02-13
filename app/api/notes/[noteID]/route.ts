@@ -4,6 +4,9 @@ import { prisma } from "@/prisma";
 import { NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
+import { v2 as cloudinary } from "cloudinary";
+import { error } from "console";
+
 export const config = {
   api: {
     bodyparser: {
@@ -49,6 +52,7 @@ export async function GET(
       content: true,
       createdAt: true,
       updatedAt: true,
+      imageURL: true,
     },
   });
 
@@ -69,8 +73,10 @@ export async function PATCH(
   { params }: { params: Promise<{ noteID: string }> }
 ) {
   const reqBody = putNoteSchema.safeParse(await request.json());
+  console.log({ reqBody });
 
   if (reqBody.success === false) {
+    console.log({ error: reqBody.error.formErrors.fieldErrors });
     return Response.json(
       { error: reqBody.error },
       {
@@ -105,12 +111,58 @@ export async function PATCH(
       content: true,
       createdAt: true,
       updatedAt: true,
+      imageURL: true,
     },
   });
 
   if (!note) {
     return Response.json({ error: "Note not found" }, { status: 404 });
   }
+
+  const deleteImage = async () => {
+    if (!note.imageURL) return;
+
+    const publicID =
+      "notes" + "/" + note.imageURL.split("/").pop()?.split(".")[0];
+    console.log({ publicID });
+    if (publicID) await cloudinary.uploader.destroy(publicID);
+  };
+
+  const uploadImage = async (image?: string) => {
+    if (!image && !reqBody.data.deleteImg) return undefined;
+    if (image && reqBody.data.deleteImg) {
+      return Response.json(
+        { error: "Failed to upload image" },
+        { status: 500 }
+      );
+    }
+
+    if (!image && reqBody.data.deleteImg) {
+      await deleteImage();
+      return "";
+    } else if (image) {
+      const imageUploadRes = await cloudinary.uploader.upload(image, {
+        folder: "notes",
+      });
+
+      if (imageUploadRes.error) {
+        return Response.json(
+          { error: "Failed to upload image" },
+          {
+            status: 500,
+          }
+        );
+      }
+
+      await deleteImage();
+
+      const imageURL = imageUploadRes.url;
+      return imageURL;
+    }
+  };
+
+  const imageURL = await uploadImage(reqBody.data.image);
+  console.log({ imageURL });
 
   const updatedNote = await prisma.notes.update({
     where: {
@@ -122,6 +174,7 @@ export async function PATCH(
     data: {
       content: reqBody.data.content,
       title: reqBody.data.title,
+      imageURL: typeof imageURL === "string" ? imageURL : undefined,
     },
   });
 

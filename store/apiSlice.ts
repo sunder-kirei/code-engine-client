@@ -68,13 +68,13 @@ export const apiSlice = createApi({
       }),
     }),
     updateNote: builder.mutation<PutNoteResponse, PutNoteRequest>({
-      query: ({ content, noteID, title }) => {
-        console.log({ content, noteID, title });
+      query: ({ content, noteID, title, image, deleteImg }) => {
+        console.log({ content, noteID, title, deleteImg });
 
         return {
           url: `/notes/${noteID}`,
           method: "PATCH",
-          body: { content, title },
+          body: { content, title, image, deleteImg },
         };
       },
       invalidatesTags: (response) => [

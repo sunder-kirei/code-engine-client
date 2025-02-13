@@ -6,10 +6,12 @@ interface NoteTileProps {
   id: string;
   title: string;
   updated_at: Date;
-  bgImg?: string;
+  bgImg?: string | null;
 }
 
 export function NoteTile({ title, updated_at, id, bgImg }: NoteTileProps) {
+  const backgroundImage =
+    bgImg && bgImg.length > 0 ? `url(${bgImg})` : "url(/assets/test.png)";
   return (
     <Link
       className={twMerge(
@@ -17,7 +19,7 @@ export function NoteTile({ title, updated_at, id, bgImg }: NoteTileProps) {
         bgImg ? "bg-black/50" : "bg-mantis-400/80"
       )}
       style={{
-        backgroundImage: bgImg && `url(${bgImg})`,
+        backgroundImage,
       }}
       href={`/notes/${id}`}
       role="button"

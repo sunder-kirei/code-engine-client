@@ -76,6 +76,7 @@ export function Nav({ userData }: NavProps) {
         </li>
         <Link
           href="/dashboard"
+          onClick={() => setOpen((prev) => !prev)}
           className={twMerge(
             "font-bold text-3xl hover:scale-110 transition-all duration-300 after:block after:w-0 after:h-1 after:bg-mantis-900 hover:after:w-full after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300",
             open
@@ -87,6 +88,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
         <Link
           href="/new?type=note"
+          onClick={() => setOpen((prev) => !prev)}
           className={twMerge(
             "font-bold text-3xl hover:scale-110 transition-all duration-300 after:block after:w-0 after:h-1 after:bg-mantis-900 hover:after:w-full after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300",
             open
@@ -98,6 +100,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
         <Link
           href="/new?type=code"
+          onClick={() => setOpen((prev) => !prev)}
           className={twMerge(
             "font-bold text-3xl hover:scale-110 transition-all duration-300 after:block after:w-0 after:h-1 after:bg-mantis-900 hover:after:w-full after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300",
             open
@@ -109,6 +112,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
         <Link
           href="/profile"
+          onClick={() => setOpen((prev) => !prev)}
           className={twMerge(
             "font-bold text-3xl hover:scale-110 transition-all duration-300 after:block after:w-0 after:h-1 after:bg-mantis-900 hover:after:w-full after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300",
             open
@@ -132,7 +136,10 @@ export function Nav({ userData }: NavProps) {
               </span>
             </Link>
           </li>
-          <li className="h-full aspect-square ml-auto grid place-items-center">
+          <li
+            className="h-full aspect-square ml-auto grid place-items-center"
+            title="Uploading..."
+          >
             <CloudUpload
               className={twMerge(
                 "transition-all duration-300 scale-0 opacity-0",
@@ -150,6 +157,7 @@ export function Nav({ userData }: NavProps) {
                 checked={showProfileDropdown}
                 onChange={() => setShowProfileDropdown((prev) => !prev)}
                 className="cursor-pointer z-100 peer opacity-0 absolute top-0 right-0 w-full h-full"
+                title={userData.name ?? "Profile"}
               />
               <Avatar
                 data={userData}
@@ -182,6 +190,7 @@ export function Nav({ userData }: NavProps) {
               setDarkMode((prev) => !prev);
             }}
             role="button"
+            title={darkMode ? "Enable light mode" : "Enable dark mode"}
           >
             <Moon
               className={twMerge(

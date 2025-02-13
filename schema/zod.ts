@@ -16,6 +16,20 @@ export const putNoteSchema = object({
   content: optional(
     string().max(10000, "Content must be less than 10000 characters")
   ),
+  image: optional(
+    string()
+      .regex(
+        /^data:image\/(png|jpeg|jpg);base64,/,
+        "Invalid image format. Only PNG and JPEG are allowed."
+      )
+      .refine((str) => {
+        const sizeInBytes =
+          (str.length * 3) / 4 -
+          (str.endsWith("==") ? 2 : str.endsWith("=") ? 1 : 0);
+        return sizeInBytes <= 5 * 1024 * 1024; // Max size: 5 MB
+      }, "Image size must be less than 5 MB")
+  ),
+  deleteImg: optional(boolean()),
 });
 
 export const putCodeSchema = object({

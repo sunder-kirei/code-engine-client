@@ -15,6 +15,8 @@ export default function NoteTitleInput({ title, noteID }: NoteTitleInputProps) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       updateNote({ noteID, title: titleState });
+      if (titleState) document.title = titleState;
+      else document.title = "Untitled";
     }, 500);
 
     return () => {

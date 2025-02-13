@@ -90,11 +90,12 @@ model Authenticator {
 }
 
 model Notes {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  creatorId String @db.ObjectId
-  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  content   String @default("")
-  title     String @default("Untitled")
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId String  @db.ObjectId
+  creator   User    @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  content   String  @default("")
+  title     String  @default("Untitled")
+  imageURL  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

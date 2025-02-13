@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
       title: true,
       createdAt: true,
       updatedAt: true,
+      imageURL: true,
     },
     skip: (params.data.page ?? 0) * (params.data.limit ?? 10),
     take: params.data.limit,

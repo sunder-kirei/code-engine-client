@@ -4,6 +4,8 @@ export type PutNoteRequest = {
   title?: string;
   content?: string;
   noteID: string;
+  image?: string;
+  deleteImg?: boolean;
 };
 
 export type GetAllNotesRequest = {

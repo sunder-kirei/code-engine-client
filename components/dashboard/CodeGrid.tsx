@@ -20,7 +20,17 @@ export default function CodeGrid({
 }: CodeGridProps & HTMLAttributes<HTMLDivElement>) {
   const { data, isLoading, isError } = useGetAllCodesQuery({ limit, page });
 
-  return (
+  return !isLoading && (data?.length ?? 0) === 0 ? (
+    <div className="h-48 rounded-md bg-mantis-300 w-full flex flex-col items-center justify-center gap-2">
+      <h2 className="text-mantis-50 text-2xl font-semibold ">No CodeFiles</h2>
+      <Link
+        href="/new?type=code"
+        className="bg-mantis-500 px-4 py-2 rounded-full text-mantis-100 hover:scale-110 transition-all duration-300"
+      >
+        Create new code
+      </Link>
+    </div>
+  ) : (
     <div className={twMerge("note_grid", className)} {...props}>
       {isLoading &&
         Array(5)
@@ -38,19 +48,6 @@ export default function CodeGrid({
           language={note.language}
         />
       ))}
-      {data?.length === 0 && (
-        <div className="aspect-[5/2] rounded-md bg-mantis-300 w-full flex flex-col items-center justify-center gap-2">
-          <h2 className="text-mantis-50 text-2xl font-semibold ">
-            No CodeFiles
-          </h2>
-          <Link
-            href="/new?type=code"
-            className="bg-mantis-500 px-4 py-2 rounded-full text-mantis-100 hover:scale-110 transition-all duration-300"
-          >
-            Create new code
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

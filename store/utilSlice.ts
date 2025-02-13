@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { apiSlice } from "./apiSlice";
 import { RootState } from ".";
+import { apiSlice } from "./apiSlice";
 
 interface UtilState {
   isUpdating: boolean;
@@ -21,6 +21,9 @@ export const utilSlice = createSlice({
         state.isUpdating = false;
       }
     );
+    builder.addMatcher(apiSlice.endpoints.updateNote.matchRejected, (state) => {
+      state.isUpdating = false;
+    });
     builder.addMatcher(apiSlice.endpoints.updateNote.matchPending, (state) => {
       state.isUpdating = true;
     });
@@ -31,12 +34,21 @@ export const utilSlice = createSlice({
         state.isUpdating = false;
       }
     );
+    builder.addMatcher(apiSlice.endpoints.updateCode.matchRejected, (state) => {
+      state.isUpdating = false;
+    });
     builder.addMatcher(apiSlice.endpoints.updateCode.matchPending, (state) => {
       state.isUpdating = true;
     });
 
     builder.addMatcher(
       apiSlice.endpoints.putUserProfile.matchFulfilled,
+      (state) => {
+        state.isUpdating = false;
+      }
+    );
+    builder.addMatcher(
+      apiSlice.endpoints.putUserProfile.matchRejected,
       (state) => {
         state.isUpdating = false;
       }

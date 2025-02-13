@@ -7,6 +7,7 @@ import { HTML } from "@/components/ui/HTML";
 import { ReduxProvider } from "@/components/ui/Provider";
 import { headers } from "next/headers";
 import { GetUserProfileResponse } from "@/types/redux";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Welcome to client",
@@ -75,6 +76,7 @@ export default async function RootLayout({
             ubuntu.className
           )}
         >
+          <Toaster richColors />
           <Nav userData={data} />
           {children}
         </body>
