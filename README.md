@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Code Engine Client 🚀
 
-## Getting Started
+> A modern web-based IDE built with **Next.js (App Directory)**, **Auth.js**, **Prisma**, **Redux**, **TailwindCSS**, **BlockNote**, and **React Monaco Editor**. Cloudinary is used for file uploads, with support for adding posters to notes.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Authentication**: Powered by **Auth.js** for secure user login and session management.
+- **Database Integration**: **Prisma** provides a seamless connection to your database.
+- **Rich Text Editor**: **BlockNote** for writing and editing notes with poster support.
+- **Code Editing**: **React Monaco Editor** for a full-fledged coding experience inside the browser.
+- **State Management**: **Redux** for handling global application state.
+- **Responsive UI**: Styled using **TailwindCSS** for a clean and modern interface.
+- **Cloudinary Integration**: Effortless file upload and poster management for notes.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js (App Directory), TailwindCSS
+- **State Management**: Redux
+- **Database**: Prisma
+- **Authentication**: Auth.js
+- **Code Editor**: React Monaco Editor
+- **Note Editor**: BlockNote
+- **File Upload**: Cloudinary
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** v14 or later
+- **PostgreSQL** or any database supported by Prisma
+- **Cloudinary Account** for managing media uploads
+
+### Installation
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/sunder-kirei/code-engine-client.git
+   cd code-engine-client
+   ```
+
+2. **Install Dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set Up Environment Variables**  
+   Create a `.env` file and add the required variables. The expected environment variables can be found in `environment.d.ts`:
+
+   ```
+   DATABASE_URL=your_database_url
+   CLOUDINARY_URL=your_cloudinary_url
+   NEXTAUTH_SECRET=your_auth_secret
+   ```
+
+4. **Run Database Migrations**
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. **Start the Development Server**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at [http://localhost:3000](http://localhost:3000).
+
+## 📂 Project Structure
+
+```plaintext
+.
+├── app         # Next.js (App Directory) pages and API routes
+├── components  # Reusable React components
+├── prisma      # Prisma schema and migrations
+├── public      # Static files
+├── redux       # Redux store and slices
+└── utils       # Utility functions and helpers
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project can be deployed on any platform that supports Next.js (Vercel, AWS, etc.).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Deploy on Vercel
 
-## Learn More
+1. Connect your repository to Vercel.
+2. Set the environment variables in the Vercel dashboard.
+3. Deploy!
 
-To learn more about Next.js, take a look at the following resources:
+## 🛡️ License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is licensed under the [MIT License](LICENSE).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
 
-## Deploy on Vercel
+Contributions, issues, and feature requests are welcome! Feel free to check out the [issues page](https://github.com/sunder-kirei/code-engine-client/issues).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📧 Contact
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Sunder Kumar – [LinkedIn](https://www.linkedin.com/in/sunder-kirei/) – sunder-kirei@outlook.com
