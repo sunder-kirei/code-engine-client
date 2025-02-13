@@ -124,7 +124,7 @@ export function Nav({ userData }: NavProps) {
         </Link>
       </nav>
       <nav className="h-20 w-full sticky z-40 top-0 bg-inherit max-w-screen-2xl mx-auto">
-        <ul className="h-full flex py-4 px-6 gap-1">
+        <ul className="h-full flex py-4 sm:px-6 px-4 gap-1">
           <li className="h-full">
             <Link
               href="/"
