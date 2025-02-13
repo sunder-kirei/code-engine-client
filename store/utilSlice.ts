@@ -24,6 +24,29 @@ export const utilSlice = createSlice({
     builder.addMatcher(apiSlice.endpoints.updateNote.matchPending, (state) => {
       state.isUpdating = true;
     });
+
+    builder.addMatcher(
+      apiSlice.endpoints.updateCode.matchFulfilled,
+      (state) => {
+        state.isUpdating = false;
+      }
+    );
+    builder.addMatcher(apiSlice.endpoints.updateCode.matchPending, (state) => {
+      state.isUpdating = true;
+    });
+
+    builder.addMatcher(
+      apiSlice.endpoints.putUserProfile.matchFulfilled,
+      (state) => {
+        state.isUpdating = false;
+      }
+    );
+    builder.addMatcher(
+      apiSlice.endpoints.putUserProfile.matchPending,
+      (state) => {
+        state.isUpdating = true;
+      }
+    );
   },
 });
 

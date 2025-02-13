@@ -27,8 +27,7 @@ model User {
 
 type UserPreferences {
   darkModeEnabled    Boolean  @default(false)
-  defaultLanguage    Language @default(JavaScript)
-  codeEditorTheme    String   @default("vs-dark")
+  defaultLanguage    Language @default(javascript)
   codeEditorFontSize Int      @default(14)
 }
 
@@ -106,7 +105,7 @@ model CodeFiles {
   creatorId String   @db.ObjectId
   creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   content   String   @default("")
-  language  Language @default(JavaScript)
+  language  Language @default(javascript)
   title     String   @default("Untitled")
 
   createdAt DateTime @default(now())
@@ -114,8 +113,8 @@ model CodeFiles {
 }
 
 enum Language {
-  JavaScript
-  Python
-  C
-  CPlusPlus
+  javascript
+  python
+  c
+  cpp
 }
