@@ -27,7 +27,7 @@ model User {
 
 type UserPreferences {
   darkModeEnabled    Boolean  @default(false)
-  defaultLanguage    Language @default(javascript)
+  defaultLanguage    Language @default(JAVASCRIPT)
   codeEditorFontSize Int      @default(14)
 }
 
@@ -102,20 +102,21 @@ model Notes {
 }
 
 model CodeFiles {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  creatorId String   @db.ObjectId
-  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  content   String   @default("")
-  language  Language @default(javascript)
-  title     String   @default("Untitled")
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId     String   @db.ObjectId
+  creator       User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  content       String   @default("")
+  language      Language @default(JAVASCRIPT)
+  title         String   @default("Untitled")
+  pastExecution String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 enum Language {
-  javascript
-  python
-  c
-  cpp
+  JAVASCRIPT
+  PYTHON
+  C
+  CPP
 }
