@@ -1,3 +1,4 @@
+import { GetExecutionStatusResponse } from "@/types/api";
 import {
   GetAllCodesRequest,
   GetAllCodesResponse,
@@ -134,6 +135,19 @@ export const apiSlice = createApi({
         { type: "Codes" },
       ],
     }),
+
+    executeCode: builder.mutation<void, string>({
+      query: (codeID) => ({
+        url: `/codes/${codeID}/execute`,
+        method: "POST",
+      }),
+    }),
+    getExecutionStatus: builder.query<GetExecutionStatusResponse, string>({
+      query: (codeID) => ({
+        url: `/codes/${codeID}/execute`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -150,5 +164,7 @@ export const {
   useQueryCodeQuery,
   useQueryNoteQuery,
   usePutUserProfileMutation,
+  useExecuteCodeMutation,
+  useGetExecutionStatusQuery,
   endpoints,
 } = apiSlice;

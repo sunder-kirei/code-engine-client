@@ -8,9 +8,7 @@ export interface CodeTitleInputProps {
   title: string;
   language: Language;
   setTitleState: Dispatch<SetStateAction<string>>;
-  setLanguageState: Dispatch<
-    SetStateAction<"javascript" | "python" | "c" | "cpp">
-  >;
+  setLanguageState: Dispatch<SetStateAction<Language>>;
 }
 
 export default function CodeTitleInput({

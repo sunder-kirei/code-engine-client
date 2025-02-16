@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
+import { Language } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
 
     const codeFile = await prisma.codeFiles.create({
       data: {
-        language: user.UserPreferences?.defaultLanguage ?? "javascript",
+        language: user.UserPreferences?.defaultLanguage ?? Language.JAVASCRIPT,
         creator: {
           connect: {
             email: session.user.email ?? "",

@@ -15,7 +15,7 @@ export function ProfileCodeLanguageSelect({
   const [updateUser] = usePutUserProfileMutation();
 
   const [languageState, setLanguageState] = useState<Language>(
-    language ?? "javascript"
+    language ?? Language.JAVASCRIPT
   );
 
   useEffect(() => {

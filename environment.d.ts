@@ -10,5 +10,7 @@ declare namespace NodeJS {
     AUTH_GOOGLE_SECRET: string;
 
     CLOUDINARY_URL: string;
+    X_API_KEY: string;
+    CODE_ENGINE_API: string;
   }
 }

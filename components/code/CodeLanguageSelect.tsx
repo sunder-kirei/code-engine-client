@@ -7,9 +7,7 @@ import { Javascript } from "../dashboard/languages/Javascript";
 import { Python } from "../dashboard/languages/Python";
 
 interface CodeLanguageSelectProps {
-  setLanguageState: Dispatch<
-    SetStateAction<"javascript" | "python" | "c" | "cpp">
-  >;
+  setLanguageState: Dispatch<SetStateAction<Language>>;
   language: Language;
 }
 
@@ -20,45 +18,45 @@ export function CodeLanguageSelect({
   const [showDialog, setShowDialog] = useState(false);
 
   const selectLanguage = {
-    [Language.cpp]: (
+    [Language.CPP]: (
       <div
-        onClick={() => setLanguageState(Language.cpp)}
+        onClick={() => setLanguageState(Language.CPP)}
         className="language-select-icon"
         role="button"
-        key={Language.cpp}
+        key={Language.CPP}
       >
         .cpp
         <CPlusPlus />
       </div>
     ),
-    [Language.c]: (
+    [Language.C]: (
       <div
-        onClick={() => setLanguageState(Language.c)}
+        onClick={() => setLanguageState(Language.C)}
         className="language-select-icon"
         role="button"
-        key={Language.c}
+        key={Language.C}
       >
         .c
         <CLang />
       </div>
     ),
-    [Language.python]: (
+    [Language.PYTHON]: (
       <div
-        onClick={() => setLanguageState(Language.python)}
+        onClick={() => setLanguageState(Language.PYTHON)}
         className="language-select-icon"
         role="button"
-        key={Language.python}
+        key={Language.PYTHON}
       >
         .py
         <Python />
       </div>
     ),
-    [Language.javascript]: (
+    [Language.JAVASCRIPT]: (
       <div
-        onClick={() => setLanguageState(Language.javascript)}
+        onClick={() => setLanguageState(Language.JAVASCRIPT)}
         className="language-select-icon"
         role="button"
-        key={Language.javascript}
+        key={Language.JAVASCRIPT}
       >
         .js
         <Javascript />

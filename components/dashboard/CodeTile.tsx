@@ -16,19 +16,19 @@ interface CodeTileProps {
 
 export function CodeTile({ title, updated_at, id, language }: CodeTileProps) {
   const bgColor =
-    language === Language.cpp
+    language === Language.CPP
       ? "bg-blue-100 ring-bg-blue-100 shadow-blue-100"
-      : language === Language.c
+      : language === Language.C
       ? "bg-blue-50 ring-bg-blue-50 shadow-blue-50"
-      : language === Language.python
+      : language === Language.PYTHON
       ? "bg-green-50 ring-bg-green-50 shadow-green-50"
       : "bg-yellow-50 ring-bg-yellow-50 shadow-yellow-50";
   const languageIcon =
-    language === Language.cpp ? (
+    language === Language.CPP ? (
       <CPlusPlus />
-    ) : language === Language.c ? (
+    ) : language === Language.C ? (
       <CLang />
-    ) : language === Language.python ? (
+    ) : language === Language.PYTHON ? (
       <Python />
     ) : (
       <Javascript />
