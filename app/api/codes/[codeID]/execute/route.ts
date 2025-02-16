@@ -1,57 +1,69 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
-import { GetExecutionStatusResponse } from "@/types/api";
+import { GetCodeEngineExecutionStatusResponse } from "@/types/api";
 import { NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ codeID: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { codeID } = await params;
-  if (!codeID) {
-    return Response.json({ error: "Invalid codeID" }, { status: 400 });
-  }
-
-  const code = await prisma.codeFiles.findUnique({
-    where: {
-      id: codeID,
-      creator: {
-        email: session.user.email,
-      },
-    },
-    include: {
-      pastExecution: {
-        orderBy: {
-          updatedAt: "desc",
-        },
-        take: 1,
-      },
-    },
-  });
-
-  if (!code) {
-    return Response.json({ error: "Code not found" }, { status: 404 });
-  }
-
-  const { pastExecution } = code;
-
-  if (!pastExecution) {
-    return Response.json({ error: "No execution history" }, { status: 404 });
-  }
-
-  const res = await fetch(
-    `${process.env.CODE_ENGINE_API}/execute/${pastExecution}`,
-    {
-      method: "GET",
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-  );
 
-  if (!res.ok) {
+    const { codeID } = await params;
+    if (!codeID) {
+      return Response.json({ error: "Invalid codeID" }, { status: 400 });
+    }
+
+    const code = await prisma.codeFiles.findUnique({
+      where: {
+        id: codeID,
+        creator: {
+          email: session.user.email,
+        },
+      },
+      select: {
+        pastExecution: true,
+      },
+    });
+    if (!code) {
+      return Response.json({ error: "Code not found" }, { status: 404 });
+    }
+
+    const promises = code.pastExecution.map(({ executionId }) =>
+      fetch(`${process.env.CODE_ENGINE_API}/execute/${executionId}`, {
+        method: "GET",
+        headers: {
+          "x-api-key": process.env.X_API_KEY ?? "",
+        },
+      })
+    );
+
+    const responses = await Promise.all(promises);
+    const data: GetCodeEngineExecutionStatusResponse[] = await Promise.all(
+      responses.map((r) => r.json())
+    );
+
+    console.log({ data });
+
+    return Response.json(
+      data.sort(
+        (a, b) =>
+          new Date(b.executeStatus.updatedAt).getTime() -
+          new Date(a.executeStatus.updatedAt).getTime()
+      ),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (e) {
+    console.log(e);
     return Response.json(
       { error: "Failed to get execution status" },
       {
@@ -62,58 +74,86 @@ export async function GET(
       }
     );
   }
-
-  const data: GetExecutionStatusResponse = await res.json();
-
-  return Response.json(data, {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 }
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ codeID: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  const { codeID } = await params;
-  if (!codeID) {
-    return Response.json({ error: "Invalid codeID" }, { status: 400 });
-  }
+    const { codeID } = await params;
+    if (!codeID) {
+      return Response.json({ error: "Invalid codeID" }, { status: 400 });
+    }
 
-  const code = await prisma.codeFiles.findUnique({
-    where: {
-      id: codeID,
-      creator: {
-        email: session.user.email,
+    const code = await prisma.codeFiles.findUnique({
+      where: {
+        id: codeID,
+        creator: {
+          email: session.user.email,
+        },
       },
-    },
-  });
+    });
 
-  if (!code) {
-    return Response.json({ error: "Code not found" }, { status: 404 });
-  }
+    if (!code) {
+      return Response.json({ error: "Code not found" }, { status: 404 });
+    }
 
-  const { content, language } = code;
+    const { content, language } = code;
 
-  const res = await fetch(`${process.env.CODE_ENGINE_API}/execute`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      code: content,
-      language: language,
-    }),
-  });
+    const res = await fetch(`${process.env.CODE_ENGINE_API}/execute`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.X_API_KEY ?? "",
+      },
+      body: JSON.stringify({
+        code: content,
+        language: language,
+      }),
+    });
 
-  if (!res.ok) {
+    if (!res.ok) {
+      console.log(await res.text());
+      return Response.json(
+        { error: "Failed to execute code" },
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    const data: GetCodeEngineExecutionStatusResponse = await res.json();
+
+    await prisma.codeFiles.update({
+      where: {
+        id: codeID,
+      },
+      data: {
+        pastExecution: {
+          push: {
+            executionId: data.executeStatus.id,
+          },
+        },
+      },
+    });
+
+    return Response.json(data, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (e) {
+    console.log(e);
     return Response.json(
       { error: "Failed to execute code" },
       {
@@ -124,20 +164,4 @@ export async function POST(
       }
     );
   }
-
-  const data: GetExecutionStatusResponse = await res.json();
-
-  await prisma.pastExecutions.create({
-    data: {
-      executionId: data.id,
-      codeFilesId: codeID,
-    },
-  });
-
-  return Response.json(data, {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 }
