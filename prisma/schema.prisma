@@ -114,14 +114,8 @@ model CodeFiles {
   updatedAt DateTime @updatedAt
 }
 
-model PastExecutions {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+type PastExecutions {
   executionId String
-  CodeFiles   CodeFiles? @relation(fields: [codeFilesId], references: [id])
-  codeFilesId String?    @db.ObjectId
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum Language {
@@ -129,4 +123,14 @@ enum Language {
   PYTHON
   C
   CPP
+}
+
+enum ExecutionStatus {
+  PENDING
+  COMPILING
+  COMPILED
+  RUNNING
+  SUCCESS
+  COMPILATION_ERROR
+  RUNTIME_ERROR
 }

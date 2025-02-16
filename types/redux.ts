@@ -1,4 +1,5 @@
 import { CodeFiles, Language, Notes, User } from "@prisma/client";
+import { GetCodeEngineExecutionStatusResponse } from "./api";
 
 export type PutNoteRequest = {
   title?: string;
@@ -43,3 +44,5 @@ export type GetUserProfileResponse = Pick<
 export type PutCodeResponse = Omit<CodeFiles, "creatorId">;
 export type GetAllCodesResponse = Omit<CodeFiles, "content" | "creatorId">[];
 export type GetCodeResponse = Omit<CodeFiles, "creatorId">;
+
+export type GetExecutionStatusResponse = GetCodeEngineExecutionStatusResponse;

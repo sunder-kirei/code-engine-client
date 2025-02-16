@@ -47,8 +47,6 @@ export async function GET(
       responses.map((r) => r.json())
     );
 
-    console.log({ data });
-
     return Response.json(
       data.sort(
         (a, b) =>

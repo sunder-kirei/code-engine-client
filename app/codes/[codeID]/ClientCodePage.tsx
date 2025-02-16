@@ -74,9 +74,10 @@ export function ClientCodePage({
             className: "editor-wrapper",
           }}
           value={codeState}
-          language={languageState}
+          language={languageState.toLowerCase()}
           theme={darkModeEnabled ? "vs-dark" : "vs-light"}
           onChange={(value) => setCodeState(value ?? "")}
+          codeID={codeID}
         />
       </Page>
     </>

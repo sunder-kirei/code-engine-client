@@ -1,10 +1,10 @@
-import { GetExecutionStatusResponse } from "@/types/api";
 import {
   GetAllCodesRequest,
   GetAllCodesResponse,
   GetAllNotesRequest,
   GetAllNotesResponse,
   GetCodeResponse,
+  GetExecutionStatusResponse,
   GetNoteResponse,
   GetUserProfileResponse,
   PutCodeRequest,
@@ -22,7 +22,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: NEXT_PUBLIC_API_URL,
   }),
-  tagTypes: ["Notes", "Codes", "UserProfile"],
+  tagTypes: ["Notes", "Codes", "UserProfile", "ExecutionResults"],
   endpoints: (builder) => ({
     getUserProfile: builder.query<GetUserProfileResponse, void>({
       query: () => ({
@@ -53,7 +53,8 @@ export const apiSlice = createApi({
         url: `/notes?limit=${limit}&page=${page}`,
         method: "GET",
       }),
-      providesTags: ["Notes"],
+      providesTags: (response) =>
+        (response ?? []).map((note) => ({ type: "Notes", id: note.id })),
     }),
     getNote: builder.query<GetNoteResponse, string>({
       query: (noteID) => ({
@@ -97,7 +98,8 @@ export const apiSlice = createApi({
         url: `/codes?limit=${limit}&page=${page}`,
         method: "GET",
       }),
-      providesTags: ["Codes"],
+      providesTags: (response) =>
+        (response ?? []).map((code) => ({ type: "Codes", id: code.id })),
     }),
     getCode: builder.query<GetCodeResponse, string>({
       query: (codeID) => ({
@@ -111,6 +113,7 @@ export const apiSlice = createApi({
         url: `/codes/query?title=${query}`,
         method: "GET",
       }),
+      providesTags: (response) => [{ type: "Codes", id: response?.id }],
     }),
     updateCode: builder.mutation<PutCodeResponse, PutCodeRequest>({
       query: ({ content, codeID, title, language }) => {
@@ -120,10 +123,7 @@ export const apiSlice = createApi({
           body: { content, title, language },
         };
       },
-      invalidatesTags: (response) => [
-        { type: "Codes", id: response?.id },
-        { type: "Codes" },
-      ],
+      invalidatesTags: (response) => [{ type: "Codes", id: response?.id }],
     }),
     deleteCode: builder.mutation<void, string>({
       query: (codeID) => ({
@@ -132,21 +132,34 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (response, error, codeID) => [
         { type: "Codes", id: codeID },
-        { type: "Codes" },
       ],
     }),
 
-    executeCode: builder.mutation<void, string>({
+    executeCode: builder.mutation<GetExecutionStatusResponse, string>({
       query: (codeID) => ({
         url: `/codes/${codeID}/execute`,
         method: "POST",
       }),
+      invalidatesTags: ["ExecutionResults"],
     }),
-    getExecutionStatus: builder.query<GetExecutionStatusResponse, string>({
+    getExecutionStatus: builder.query<
+      GetExecutionStatusResponse,
+      { codeID: string; executeID: string }
+    >({
+      query: ({ codeID, executeID }) => ({
+        url: `/codes/${codeID}/execute/${executeID}`,
+        method: "GET",
+      }),
+      providesTags: (response) => [
+        { type: "ExecutionResults", id: response?.executeStatus.id },
+      ],
+    }),
+    getAllExecutions: builder.query<GetExecutionStatusResponse[], string>({
       query: (codeID) => ({
         url: `/codes/${codeID}/execute`,
         method: "GET",
       }),
+      providesTags: ["ExecutionResults"],
     }),
   }),
 });
@@ -166,5 +179,6 @@ export const {
   usePutUserProfileMutation,
   useExecuteCodeMutation,
   useGetExecutionStatusQuery,
+  useGetAllExecutionsQuery,
   endpoints,
 } = apiSlice;
