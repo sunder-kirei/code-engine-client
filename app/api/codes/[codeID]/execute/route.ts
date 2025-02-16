@@ -24,6 +24,14 @@ export async function GET(
         email: session.user.email,
       },
     },
+    include: {
+      pastExecution: {
+        orderBy: {
+          updatedAt: "desc",
+        },
+        take: 1,
+      },
+    },
   });
 
   if (!code) {
@@ -119,15 +127,10 @@ export async function POST(
 
   const data: GetExecutionStatusResponse = await res.json();
 
-  await prisma.codeFiles.update({
-    where: {
-      id: codeID,
-      creator: {
-        email: session.user.email,
-      },
-    },
+  await prisma.pastExecutions.create({
     data: {
-      pastExecution: [data.id],
+      executionId: data.id,
+      codeFilesId: codeID,
     },
   });
 
