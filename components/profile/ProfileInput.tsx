@@ -1,7 +1,8 @@
 "use client";
 
 import { usePutUserProfileMutation } from "@/store/apiSlice";
-import { InputHTMLAttributes, useEffect, useState } from "react";
+import { InputHTMLAttributes, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 interface ProfileInputProps {
@@ -19,14 +20,28 @@ export function ProfileInput({
   field,
   ...props
 }: ProfileInputProps & InputHTMLAttributes<HTMLInputElement>) {
+  const isInitialRender = useRef(true);
   const [updateUser] = usePutUserProfileMutation();
 
   const [state, setState] = useState(defaultValue);
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
-      updateUser({ [field]: state });
-    }, 500);
+      toast.promise(
+        updateUser({
+          [field]: state,
+        }),
+        {
+          loading: "Updating profile...",
+          success: "Updated profile!",
+          error: "Failed to update profile!",
+        }
+      );
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -50,7 +65,10 @@ export function ProfileInput({
         placeholder={placeholder ?? "Untitled"}
         type={type ?? "text"}
         value={state}
-        onChange={(event) => setState(event.target.value)}
+        onChange={(event) => {
+          isInitialRender.current = false;
+          setState(event.target.value);
+        }}
         {...props}
       />
     </div>

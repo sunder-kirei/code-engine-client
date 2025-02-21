@@ -76,7 +76,7 @@ export default async function RootLayout({
             ubuntu.className
           )}
         >
-          <Toaster richColors />
+          <Toaster richColors closeButton />
           <Nav userData={data} />
           {children}
         </body>

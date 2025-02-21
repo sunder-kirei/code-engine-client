@@ -16,15 +16,17 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Avatar } from "./Avatar";
+import { toast } from "sonner";
 
 interface NavProps {
   userData: GetUserProfileResponse;
 }
 
 export function Nav({ userData }: NavProps) {
+  const isInitialRender = useRef(true);
   const [isVisible, setIsVisible] = useState(false);
   const isLoggedIn = userData.id !== undefined && userData.id !== null;
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -53,8 +55,16 @@ export function Nav({ userData }: NavProps) {
   }, []);
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      return;
+    }
+
     if (isLoggedIn) {
-      updateUser({ darkModeEnabled: darkMode });
+      toast.promise(updateUser({ darkModeEnabled: darkMode }), {
+        loading: "Updating theme...",
+        success: "Updated theme!",
+        error: "Failed to update theme!",
+      });
     }
     dispatch(themeSlice.actions.setTheme(darkMode));
   }, [userData, updateUser, darkMode, dispatch, isLoggedIn]);
@@ -189,6 +199,7 @@ export function Nav({ userData }: NavProps) {
           <li
             className="relative h-6 aspect-square justify-self-center self-center cursor-pointer transition-all duration-300 hover:scale-110"
             onClick={() => {
+              isInitialRender.current = false;
               setDarkMode((prev) => !prev);
             }}
             role="button"

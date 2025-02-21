@@ -7,7 +7,7 @@ import { Page } from "@/components/ui/Page";
 import { useAppSelector } from "@/store";
 import { useUpdateCodeMutation } from "@/store/apiSlice";
 import { GetCodeResponse } from "@/types/redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface ClientCodePageProps {
@@ -19,6 +19,9 @@ export function ClientCodePage({
   codeID,
   initData: data,
 }: ClientCodePageProps) {
+  const isInitialRenderTitle = useRef(true);
+  const isInitialRenderContent = useRef(true);
+  const isInitialRenderLanguage = useRef(true);
   const [updateCode] = useUpdateCodeMutation();
   const darkModeEnabled = useAppSelector(
     (state) => state.theme.darkModeEnabled
@@ -29,11 +32,19 @@ export function ClientCodePage({
   const [codeState, setCodeState] = useState(data.content);
 
   useEffect(() => {
+    if (isInitialRenderTitle.current) {
+      return;
+    }
+    console.log(isInitialRenderTitle.current);
     const timeout = setTimeout(() => {
-      updateCode({ codeID, title: titleState });
+      toast.promise(updateCode({ codeID, title: titleState }), {
+        loading: "Saving...",
+        success: "Saved!",
+        error: "Error saving!",
+      });
       if (titleState) document.title = titleState;
       else document.title = "Untitled";
-    }, 500);
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -41,9 +52,17 @@ export function ClientCodePage({
   }, [codeID, data.title, titleState, updateCode]);
 
   useEffect(() => {
+    if (isInitialRenderLanguage.current) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
-      updateCode({ codeID, language: languageState });
-    }, 500);
+      toast.promise(updateCode({ codeID, language: languageState }), {
+        loading: "Saving...",
+        success: "Saved!",
+        error: "Error saving!",
+      });
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -51,9 +70,17 @@ export function ClientCodePage({
   }, [codeID, data.language, languageState, updateCode]);
 
   useEffect(() => {
+    if (isInitialRenderContent.current) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
-      updateCode({ codeID, content: codeState });
-    }, 500);
+      toast.promise(updateCode({ codeID, content: codeState }), {
+        loading: "Saving...",
+        success: "Saved!",
+        error: "Error saving!",
+      });
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -64,11 +91,19 @@ export function ClientCodePage({
     const listener = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === "s") {
         event.preventDefault();
-        toast.promise(updateCode({ codeID, content: codeState }), {
-          loading: "Saving...",
-          success: "Saved!",
-          error: "Failed to save!",
-        });
+        toast.promise(
+          updateCode({
+            codeID,
+            content: codeState,
+            language: languageState,
+            title: titleState,
+          }),
+          {
+            loading: "Saving...",
+            success: "Saved!",
+            error: "Failed to save!",
+          }
+        );
       }
     };
     window.addEventListener("keydown", listener);
@@ -76,15 +111,21 @@ export function ClientCodePage({
     return () => {
       window.removeEventListener("keydown", listener);
     };
-  }, [codeID, codeState, updateCode]);
+  }, [codeID, codeState, languageState, titleState, updateCode]);
 
   return (
     <>
       <DeleteCodeDialog codeID={codeID} />
       <Page className="flex flex-col">
         <CodeTitleInput
-          setLanguageState={setLanguageState}
-          setTitleState={setTitleState}
+          setLanguageState={(value) => {
+            isInitialRenderLanguage.current = false;
+            setLanguageState(value);
+          }}
+          setTitleState={(value) => {
+            isInitialRenderTitle.current = false;
+            setTitleState(value);
+          }}
           title={titleState}
           language={languageState}
         />
@@ -95,7 +136,10 @@ export function ClientCodePage({
           value={codeState}
           language={languageState.toLowerCase()}
           theme={darkModeEnabled ? "vs-dark" : "vs-light"}
-          onChange={(value) => setCodeState(value ?? "")}
+          onChange={(value) => {
+            isInitialRenderContent.current = false;
+            setCodeState(value ?? "");
+          }}
           codeID={codeID}
         />
       </Page>

@@ -2,8 +2,9 @@
 
 import { usePutUserProfileMutation } from "@/store/apiSlice";
 import { Language } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CodeLanguageSelect } from "../code/CodeLanguageSelect";
+import { toast } from "sonner";
 
 interface ProfileCodeLanguageSelectProps {
   language: Language | undefined;
@@ -12,6 +13,7 @@ interface ProfileCodeLanguageSelectProps {
 export function ProfileCodeLanguageSelect({
   language,
 }: ProfileCodeLanguageSelectProps) {
+  const isInitialRender = useRef(true);
   const [updateUser] = usePutUserProfileMutation();
 
   const [languageState, setLanguageState] = useState<Language>(
@@ -19,9 +21,17 @@ export function ProfileCodeLanguageSelect({
   );
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
-      updateUser({ defaultLanguage: languageState });
-    }, 500);
+      toast.promise(updateUser({ defaultLanguage: languageState }), {
+        loading: "Updating language...",
+        success: "Updated language!",
+        error: "Failed to update language!",
+      });
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -38,7 +48,10 @@ export function ProfileCodeLanguageSelect({
       </label>
       <CodeLanguageSelect
         language={languageState}
-        setLanguageState={setLanguageState}
+        setLanguageState={(value) => {
+          isInitialRender.current = false;
+          setLanguageState(value);
+        }}
       />
     </div>
   );

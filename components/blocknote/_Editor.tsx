@@ -7,7 +7,8 @@ import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export interface StaticEditorProps {
   initialState: string;
@@ -25,6 +26,7 @@ export default function StaticEditor({
 
     return parsed;
   }, [initialState]);
+  const isInitialRender = useRef(true);
 
   const darkModeEnabled = useAppSelector(
     (state) => state.theme.darkModeEnabled
@@ -33,9 +35,20 @@ export default function StaticEditor({
   const [blockState, setBlockState] = useState<Block[]>(initialContent);
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
-      updateNote({ content: JSON.stringify(blockState), noteID });
-    }, 500);
+      toast.promise(
+        updateNote({ content: JSON.stringify(blockState), noteID }),
+        {
+          loading: "Saving...",
+          success: "Saved!",
+          error: "Error saving!",
+        }
+      );
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -52,12 +65,39 @@ export default function StaticEditor({
     initialContent,
   });
 
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        toast.promise(
+          updateNote({
+            content: JSON.stringify(blockState),
+            noteID: noteID,
+          }),
+          {
+            loading: "Saving...",
+            success: "Saved!",
+            error: "Failed to save!",
+          }
+        );
+      }
+    };
+    window.addEventListener("keydown", listener);
+
+    return () => {
+      window.removeEventListener("keydown", listener);
+    };
+  }, [blockState, noteID, updateNote]);
+
   // Renders the editor instance using a React component.
   return (
     <BlockNoteView
       editor={editor}
       theme={darkModeEnabled ? "dark" : "light"}
-      onChange={() => setBlockState(editor.document)}
+      onChange={() => {
+        isInitialRender.current = false;
+        setBlockState(editor.document);
+      }}
       className="h-full grow flex flex-col"
     />
   );

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { useUpdateNoteMutation } from "@/store/apiSlice";
 import { GetNoteResponse } from "@/types/redux";
 import { Image, MapPinPlus, MousePointerClick, Trash } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -16,6 +16,7 @@ export interface PosterUploadProps {
 }
 
 export function PosterUpload({ noteID, userData }: PosterUploadProps) {
+  const isInitialRender = useRef(true);
   const [src, setSrc] = useState<string | undefined>(
     userData.imageURL ?? undefined
   );
@@ -46,6 +47,7 @@ export function PosterUpload({ noteID, userData }: PosterUploadProps) {
           toast.error("Image size must be less than 5 MB");
           return;
         }
+        isInitialRender.current = false;
         setSrc(binaryStr as string);
       };
       reader.readAsDataURL(file);
@@ -61,11 +63,23 @@ export function PosterUpload({ noteID, userData }: PosterUploadProps) {
   });
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      return;
+    }
+
     if (src && src.length > 0) {
-      updateNote({ image: src, noteID: noteID });
+      toast.promise(updateNote({ image: src, noteID: noteID }), {
+        loading: "Uploading...",
+        success: "Poster uploaded successfully",
+        error: "Failed to upload poster",
+      });
     }
     if (src?.length === 0) {
-      updateNote({ deleteImg: true, noteID: noteID });
+      toast.promise(updateNote({ deleteImg: true, noteID: noteID }), {
+        loading: "Deleting...",
+        success: "Poster deleted successfully",
+        error: "Failed to delete poster",
+      });
     }
   }, [noteID, src, updateNote]);
 
