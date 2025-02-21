@@ -4,7 +4,6 @@ import { putNoteSchema } from "@/schema/zod";
 import { NextRequest } from "next/server";
 
 import { v2 as cloudinary } from "cloudinary";
-import { Notes } from "@prisma/client";
 
 export const config = {
   api: {

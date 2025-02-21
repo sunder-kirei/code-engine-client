@@ -76,7 +76,7 @@ export function ClientCodePage({
     return () => {
       window.removeEventListener("keydown", listener);
     };
-  }, []);
+  }, [codeID, codeState, updateCode]);
 
   return (
     <>
