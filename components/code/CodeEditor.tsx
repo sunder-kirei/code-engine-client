@@ -68,21 +68,29 @@ export default function CodeEditor({ codeID, ...props }: CodeEditorProps) {
     }
   }, [statusUpdateData]);
 
+  useEffect(() => {
+    const isLg = window.innerWidth >= 1024;
+
+    if (isLg) {
+      setShowDialog(true);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col grow relative overflow-hidden">
       <Editor {...props} />
       <div
         className={twMerge(
-          "sm:h-full sm:w-1/2 h-[90%] w-full max-w-96 sm:left-full left-0 top-full sm:top-0 sm:-translate-x-5 absolute bg-mantis-100 transition-all duration-300 rounded-t-md sm:rounded-t-none sm:rounded-l-md group py-4 px-6 flex flex-col gap-4",
+          "sm:h-full sm:w-1/2 h-[90%] w-full max-w-96 sm:left-full left-0 top-full sm:top-0 sm:-translate-x-5 absolute bg-mantis-100 dark:bg-mantis-300 transition-all duration-300 rounded-t-md sm:rounded-t-none sm:rounded-l-md group py-4 px-6 flex flex-col gap-4 dark:text-mantis-900",
           showDialog &&
             "sm:-translate-x-full sm:translate-y-0 -translate-y-full",
           !showDialog &&
-            "sm:hover:-translate-x-8 -translate-y-12 sm:translate-y-0 hover:cursor-pointer hover:bg-mantis-300"
+            "sm:hover:-translate-x-8 -translate-y-12 sm:translate-y-0 hover:cursor-pointer hover:bg-mantis-300 dark:hover:bg-mantis-500"
         )}
         onClick={() => setShowDialog(true)}
       >
         <X
-          className="absolute top-4 right-4 size-6 cursor-pointer hover:scale-150 hover:rotate-180 transition-all duration-200 text-mantis-500"
+          className="absolute top-4 right-4 size-6 cursor-pointer hover:scale-150 hover:rotate-180 transition-all duration-200 text-mantis-500 dark:text-mantis-900"
           onClick={(e) => {
             e.stopPropagation();
             setShowDialog(false);
@@ -90,7 +98,7 @@ export default function CodeEditor({ codeID, ...props }: CodeEditorProps) {
         />
         <ChevronLeft
           className={twMerge(
-            "hidden sm:block absolute top-1/2 -translate-y-1/2 left-1 size-6 cursor-pointer text-mantis-500 transition-all duration-200 opacity-50 hover:scale-125 hover:opacity-100",
+            "hidden sm:block absolute top-1/2 -translate-y-1/2 left-1 size-6 cursor-pointer text-mantis-500 dark:text-mantis-900 transition-all duration-200 opacity-50 hover:scale-125 hover:opacity-100",
             !showDialog && "group-hover:scale-125 group-hover:opacity-100",
             showDialog && "rotate-180"
           )}
@@ -116,7 +124,7 @@ export default function CodeEditor({ codeID, ...props }: CodeEditorProps) {
             !showDialog && "opacity-0 pointer-events-none"
           )}
         >
-          <H2>Execute Code</H2>
+          <H2 className="dark:text-mantis-900">Execute Code</H2>
 
           {(allExecutionsLoading || executeLoading || statusUpdateLoading) && (
             <div className="h-full w-full bg-mantis-200 mb-2 rounded-md grid place-items-center text-center animate-pulse"></div>
@@ -159,7 +167,7 @@ export default function CodeEditor({ codeID, ...props }: CodeEditorProps) {
               </div>
             )}
           <button
-            className="bg-mantis-300 hover:bg-mantis-400 py-2 px-4 rounded-full text-mantis-900 font-semibold hover:font-bold hover:text-white transition-all duration-200"
+            className="bg-mantis-300 dark:bg-mantis-500 dark:text-mantis-50 hover:dark:bg-mantis-700 hover:bg-mantis-400 py-2 px-4 rounded-full text-mantis-900 font-semibold hover:font-bold hover:text-white transition-all duration-200"
             onClick={() => executeCode(codeID)}
           >
             Execute Code
@@ -171,7 +179,7 @@ export default function CodeEditor({ codeID, ...props }: CodeEditorProps) {
             !showDialog && "opacity-0 pointer-events-none"
           )}
         >
-          <H2>Previous Executions</H2>
+          <H2 className="dark:text-mantis-900">Previous Executions</H2>
           <div
             className={twMerge(
               "w-full grow scrollbar-thin scrollbar-thumb-mantis-200 scrollbar-track-transparent",

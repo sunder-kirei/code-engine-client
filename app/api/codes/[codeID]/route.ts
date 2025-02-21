@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 export const config = {
   api: {
     bodyparser: {
-      sizeLimit: "10mb",
+      sizeLimit: "1mb",
     },
   },
 };
@@ -39,7 +39,8 @@ export async function GET(
     where: {
       id: p.codeID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
     select: {
@@ -96,7 +97,8 @@ export async function PATCH(
     where: {
       id: p.codeID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
     select: {
@@ -159,7 +161,10 @@ export async function DELETE(
     return Response.json({ error: "Code not found" }, { status: 404 });
   }
 
-  if (code.creator.email !== session.user.email) {
+  if (
+    code.creator.email !== session.user.email &&
+    code.creator.id !== session.user.id
+  ) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 

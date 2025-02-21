@@ -14,7 +14,7 @@ export async function generateMetadata() {
   });
   const data: GetUserProfileResponse = await response.json();
   return {
-    title: `${data.name}'s Dashboard`,
+    title: `${data.name ?? "Guest"}'s Dashboard`,
     description: "Dashboard",
   };
 }

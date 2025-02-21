@@ -25,7 +25,8 @@ export async function GET(
       where: {
         id: codeID,
         creator: {
-          email: session.user.email,
+          email: session.user.email ?? undefined,
+          id: session.user.id,
         },
       },
     });

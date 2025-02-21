@@ -6,13 +6,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET() {
   const session = await auth();
 
-  if (!session?.user || !session.user.email) {
+  if (!session?.user) {
     return NextResponse.json({ error: "Not logged in" }, { status: 401 });
   }
 
   const user = await prisma.user.findUnique({
     where: {
-      email: session.user.email,
+      email: session.user.email ?? undefined,
+      id: session.user.id,
     },
     select: {
       id: true,
@@ -43,13 +44,14 @@ export async function PATCH(request: NextRequest) {
 
   const session = await auth();
 
-  if (!session?.user || !session.user.email) {
+  if (!session?.user) {
     return NextResponse.json({ error: "Not logged in" }, { status: 401 });
   }
 
   const user = await prisma.user.update({
     where: {
-      email: session.user.email,
+      email: session.user.email ?? undefined,
+      id: session.user.id,
     },
     data: {
       name: reqBody.data.name,

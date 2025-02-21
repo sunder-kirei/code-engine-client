@@ -28,7 +28,8 @@ export async function GET(request: NextRequest) {
   const codes = await prisma.codeFiles.findMany({
     where: {
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
       title: {
         contains: params.data.title,

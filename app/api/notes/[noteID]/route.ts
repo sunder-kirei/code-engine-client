@@ -4,13 +4,21 @@ import { putNoteSchema } from "@/schema/zod";
 import { NextRequest } from "next/server";
 
 import { v2 as cloudinary } from "cloudinary";
+import { Notes } from "@prisma/client";
 
 export const config = {
   api: {
     bodyparser: {
-      sizeLimit: "10mb",
+      sizeLimit: "1mb",
     },
   },
+};
+
+const deleteImage = async (imageURL: string | undefined | null) => {
+  if (!imageURL) return;
+
+  const publicID = "notes" + "/" + imageURL.split("/").pop()?.split(".")[0];
+  if (publicID) await cloudinary.uploader.destroy(publicID);
 };
 
 export async function GET(
@@ -41,7 +49,8 @@ export async function GET(
     where: {
       id: p.noteID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
     select: {
@@ -99,7 +108,8 @@ export async function PATCH(
     where: {
       id: p.noteID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
     select: {
@@ -116,14 +126,6 @@ export async function PATCH(
     return Response.json({ error: "Note not found" }, { status: 404 });
   }
 
-  const deleteImage = async () => {
-    if (!note.imageURL) return;
-
-    const publicID =
-      "notes" + "/" + note.imageURL.split("/").pop()?.split(".")[0];
-    if (publicID) await cloudinary.uploader.destroy(publicID);
-  };
-
   const uploadImage = async (image?: string) => {
     if (!image && !reqBody.data.deleteImg) return undefined;
     if (image && reqBody.data.deleteImg) {
@@ -134,7 +136,7 @@ export async function PATCH(
     }
 
     if (!image && reqBody.data.deleteImg) {
-      await deleteImage();
+      await deleteImage(note.imageURL);
       return "";
     } else if (image) {
       const imageUploadRes = await cloudinary.uploader.upload(image, {
@@ -150,7 +152,7 @@ export async function PATCH(
         );
       }
 
-      await deleteImage();
+      await deleteImage(note.imageURL);
 
       const imageURL = imageUploadRes.url;
       return imageURL;
@@ -163,7 +165,8 @@ export async function PATCH(
     where: {
       id: p.noteID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
     data: {
@@ -199,7 +202,8 @@ export async function DELETE(
     where: {
       id: p.noteID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
     include: {
@@ -211,15 +215,21 @@ export async function DELETE(
     return Response.json({ error: "Note not found" }, { status: 404 });
   }
 
-  if (note.creator.email !== session.user.email) {
+  if (
+    note.creator.email !== session.user.email &&
+    note.creator.id !== session.user.id
+  ) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  await deleteImage(note.imageURL);
 
   await prisma.notes.delete({
     where: {
       id: p.noteID,
       creator: {
-        email: session.user.email,
+        email: session.user.email ?? undefined,
+        id: session.user.id,
       },
     },
   });

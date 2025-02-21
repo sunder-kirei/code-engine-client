@@ -4,6 +4,7 @@ import { useDeleteCodeMutation } from "@/store/apiSlice";
 import { Trash2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 interface DeleteCodeDialogProps {
@@ -19,9 +20,15 @@ export function DeleteCodeDialog({ codeID }: DeleteCodeDialogProps) {
   };
 
   const onConfirm = () => {
-    deleteCode(codeID);
+    toast.promise(deleteCode(codeID), {
+      loading: "Deleting...",
+
+      finally: () => {
+        toast.success("Deleted!");
+        redirect("/dashboard");
+      },
+    });
     setShow(false);
-    redirect("/dashboard");
   };
 
   useEffect(() => {
@@ -44,10 +51,10 @@ export function DeleteCodeDialog({ codeID }: DeleteCodeDialogProps) {
       >
         <div className="bg-mantis-100 dark:bg-gray-800 rounded-md p-6 flex flex-col gap-6 shadow-lg">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl text-mantis-900 font-bold">
+            <h1 className="text-2xl text-mantis-900 dark:text-mantis-50 font-bold">
               Delete Code File
             </h1>
-            <p className="text-base text-mantis-500">
+            <p className="text-base text-mantis-500 dark:text-mantis-50">
               Are you sure you want to delete this code file?
             </p>
           </div>

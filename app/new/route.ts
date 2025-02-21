@@ -12,13 +12,14 @@ export async function GET(request: NextRequest) {
 
   const session = await auth();
 
-  if (!session?.user || !session.user.email) {
+  if (!session?.user) {
     redirect(`/get-started?callbackUrl=/new?type=${type}`);
   }
 
   const user = await prisma.user.findUnique({
     where: {
-      email: session.user.email,
+      email: session.user.email ?? undefined,
+      id: session.user.id,
     },
     select: {
       id: true,
@@ -34,7 +35,8 @@ export async function GET(request: NextRequest) {
     const noteCount = await prisma.notes.count({
       where: {
         creator: {
-          email: session.user.email,
+          email: session.user.email ?? undefined,
+          id: session.user.id,
         },
       },
     });
@@ -50,7 +52,8 @@ export async function GET(request: NextRequest) {
       data: {
         creator: {
           connect: {
-            email: session.user.email ?? "",
+            email: session.user.email ?? undefined,
+            id: session.user.id,
           },
         },
       },
@@ -61,7 +64,8 @@ export async function GET(request: NextRequest) {
     const codeCount = await prisma.codeFiles.count({
       where: {
         creator: {
-          email: session.user.email,
+          email: session.user.email ?? undefined,
+          id: session.user.id,
         },
       },
     });
@@ -78,7 +82,8 @@ export async function GET(request: NextRequest) {
         language: user.UserPreferences?.defaultLanguage ?? Language.JAVASCRIPT,
         creator: {
           connect: {
-            email: session.user.email ?? "",
+            email: session.user.email ?? undefined,
+            id: session.user.id,
           },
         },
       },

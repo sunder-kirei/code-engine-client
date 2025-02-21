@@ -8,6 +8,7 @@ import { useAppSelector } from "@/store";
 import { useUpdateCodeMutation } from "@/store/apiSlice";
 import { GetCodeResponse } from "@/types/redux";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface ClientCodePageProps {
   codeID: string;
@@ -58,6 +59,24 @@ export function ClientCodePage({
       clearTimeout(timeout);
     };
   }, [codeID, codeState, data.content, updateCode]);
+
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        toast.promise(updateCode({ codeID, content: codeState }), {
+          loading: "Saving...",
+          success: "Saved!",
+          error: "Failed to save!",
+        });
+      }
+    };
+    window.addEventListener("keydown", listener);
+
+    return () => {
+      window.removeEventListener("keydown", listener);
+    };
+  }, []);
 
   return (
     <>

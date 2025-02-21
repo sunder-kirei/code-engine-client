@@ -4,6 +4,7 @@ import { useDeleteNoteMutation } from "@/store/apiSlice";
 import { Trash2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 interface DeleteNoteDialogProps {
@@ -19,9 +20,15 @@ export function DeleteNoteDialog({ noteID }: DeleteNoteDialogProps) {
   };
 
   const onConfirm = () => {
-    deleteNote(noteID);
+    toast.promise(deleteNote(noteID), {
+      loading: "Deleting...",
+
+      finally: () => {
+        toast.success("Deleted!");
+        redirect("/dashboard");
+      },
+    });
     setShow(false);
-    redirect("/dashboard");
   };
 
   useEffect(() => {
@@ -44,8 +51,10 @@ export function DeleteNoteDialog({ noteID }: DeleteNoteDialogProps) {
       >
         <div className="bg-mantis-100 dark:bg-gray-800 rounded-md p-6 flex flex-col gap-6 shadow-lg">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl text-mantis-900 font-bold">Delete Note</h1>
-            <p className="text-base text-mantis-500">
+            <h1 className="text-2xl text-mantis-900 dark:text-mantis-50 font-bold">
+              Delete Note
+            </h1>
+            <p className="text-base text-mantis-500 dark:text-mantis-50">
               Are you sure you want to delete this note?
             </p>
           </div>
